@@ -63,6 +63,11 @@ AI-specific trace / evaluation 실행 substrate
 기술적 Safety / Streaming(SSE)
 ```
 
+Shared AI의 "orchestration"은 Tool/Retriever 등을 호출·실행하는 mechanism(호출 순서·규약)만
+의미한다. 어떤 Tool/Retriever/Lens를 선택할지에 대한 Product workflow semantics는 Shared AI가
+소유하지 않으며, 계속 §3.1의 `Product Workflow / Use Case(Skill) 정의`에 귀속된다
+(`ADR-0015` §7.4 정렬).
+
 ## 4. Multi-product / multi-tenant context
 
 Shared AI의 모든 실행 경로(Tool·Retriever·Evidence)에서 아래 scope가 유실되지 않아야 한다.

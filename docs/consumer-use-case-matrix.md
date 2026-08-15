@@ -112,7 +112,7 @@ InvestmentReview Skill
   guard action → lens/redirect → template → Output Validator)을 Shared AI가 재정의하지 않는다.
   point-in-time grounding으로 사후 결과와 당시 판단을 분리.
 
-**판정: PASS (단, Lens/runtime-contract 실행 계약 소유는 NEEDS_ADR로 미확정)**
+**판정: PASS (경계 보존 기준). Lens 실행 계약 소유는 OD-1/OD-4로 이월되며 이 use case의 경계 유효성에는 영향 없음.**
 
 ## 5. Cross-use-case 검증 요약
 
