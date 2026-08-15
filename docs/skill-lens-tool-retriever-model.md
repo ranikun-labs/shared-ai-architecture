@@ -100,7 +100,7 @@ Vector RAG(A)를 정확한 사실값의 SSOT로 쓰지 않는다. 사실값은 T
 
 | # | Open decision | 분류 |
 | --- | --- | --- |
-| OD-1 | Skill/Lens 실행 계약을 Shared AI가 소유 vs Model Gateway까지만 소유 | NEEDS_ADR |
+| OD-1 | Skill/Lens 실행 계약을 Shared AI가 소유 vs Model Gateway까지만 소유 | **RESOLVED — [ADR-0001](adr/ADR-0001-skill-lens-workflow-execution-ownership.md)** (실행 mechanism = Shared AI; 정의·선택·검증 = Product/Domain) |
 | OD-6 | RAG corpus(A) 물리 저장 위치/소유/tenant 격리 방식 | NEEDS_ADR |
 | OD-10 | Tool 선언(capability declaration) 형식이 provider/product-neutral하게 필요한가 | deferred |
 

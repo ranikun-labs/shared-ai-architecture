@@ -35,6 +35,7 @@
 | 실행 모델 | [execution-model](docs/execution-model.md) |
 | Capability 분리 | [skill-lens-tool-retriever-model](docs/skill-lens-tool-retriever-model.md) |
 | Consumer 검증 | [consumer-use-case-matrix](docs/consumer-use-case-matrix.md) |
+| 실행 ownership ADR | [ADR-0001 Skill/Lens/Workflow Execution Ownership](docs/adr/ADR-0001-skill-lens-workflow-execution-ownership.md) (OD-1/OD-4 확정) |
 
 Decision status와 implementation status는 분리한다. 문서 존재가 구현·배포·runtime 활성화를
 의미하지 않는다.
