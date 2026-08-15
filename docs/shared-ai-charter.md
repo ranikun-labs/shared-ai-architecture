@@ -66,6 +66,10 @@ Provider-neutral Retriever / RAG Adapter, Embedding Runtime, Vector Infrastructu
 공통 AI Orchestration / AI Job Runtime
 ```
 
+> Skill/Lens **실행 계약**과 공통 orchestration의 소유는 [ADR-0001](adr/ADR-0001-skill-lens-workflow-execution-ownership.md)에서
+> confirmed(실행 mechanism = Shared AI, 정의·선택·검증 = Product/Domain)로 확정되었다. Retriever/RAG·
+> Embedding·Vector infra는 여전히 candidate(OD-2/OD-6)다.
+
 → 상세 경계와 충돌은 [source-of-truth-map](source-of-truth-map.md),
 [skill-lens-tool-retriever-model](skill-lens-tool-retriever-model.md) 참조.
 
@@ -112,10 +116,10 @@ Platform 통신·배포·데이터 소유권    → harness-foundation-docs
 
 | # | Open decision | 분류 |
 | --- | --- | --- |
-| OD-1 | Shared AI가 "Skill/Lens 실행 계약"을 소유하는가, 아니면 Model Gateway까지만 소유하고 Skill/Lens 실행은 각 Product runtime에 두는가 | NEEDS_ADR |
+| OD-1 | Shared AI가 "Skill/Lens 실행 계약"을 소유하는가, 아니면 Model Gateway까지만 소유하고 Skill/Lens 실행은 각 Product runtime에 두는가 | **RESOLVED — [ADR-0001](adr/ADR-0001-skill-lens-workflow-execution-ownership.md)** (실행 mechanism 소유, 정의·선택·검증은 Product/Domain) |
 | OD-2 | Retriever/RAG·Embedding·Vector infra의 Shared AI 소유 여부와 범위 | NEEDS_ADR (ADR-0015 §10 follow-up) |
 | OD-3 | Shared AI physical runtime 위치(독립 Python runtime)와 도입 시점 | deferred (ADR-0013/0015) |
-| OD-4 | Finance의 기존 자체 runtime contract와 Shared AI 실행 계약의 관계(채택/병존) | NEEDS_ADR |
+| OD-4 | Finance의 기존 자체 runtime contract와 Shared AI 실행 계약의 관계(채택/병존) | **RESOLVED — [ADR-0001](adr/ADR-0001-skill-lens-workflow-execution-ownership.md)** (병존 + opt-in 채택) |
 
 ## 7. Related canonical sources
 

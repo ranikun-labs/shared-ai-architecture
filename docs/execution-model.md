@@ -107,7 +107,7 @@ Evidence 후보 필드 (core envelope):
 
 | # | Open decision | 분류 |
 | --- | --- | --- |
-| OD-4 | Finance 기존 runtime pipeline과 Shared AI 실행 골격의 관계 | NEEDS_ADR |
+| OD-4 | Finance 기존 runtime pipeline과 Shared AI 실행 골격의 관계 | **RESOLVED — [ADR-0001](adr/ADR-0001-skill-lens-workflow-execution-ownership.md)** (병존 + opt-in; Shared AI는 선언된 순서·gate를 재정의 없이 집행) |
 | OD-8 | Evidence core envelope vs domain extension 경계와 schema | NEEDS_ADR |
 | OD-9 | Workflow orchestration 구현 방식(코드 vs DSL vs LangGraph) | deferred |
 

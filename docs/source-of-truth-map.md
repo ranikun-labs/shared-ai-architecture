@@ -86,7 +86,7 @@ Shared AI 설계가 상위 canonical source의 기존 결정을 조용히 재해
 | 제품별 System Prompt / Workflow / Domain Policy | Product (ADR-0015 §7.4) | Product | No | Preserve |
 | Finance Lens **semantics** | Finance | Finance | No | Keep |
 | Finance PolicyGuard / Output Validator / Routing **규칙** | Finance | Finance | No | Keep |
-| Lens/Skill **실행 계약**(interface) | Finance 자체 runtime contract 보유; Platform은 "공통 AI Orchestration"을 candidate로만 인정 | Shared AI (실행 계약) | Possible | **NEEDS_ADR** — Finance 기존 runtime contract와 정합/병존 여부 결정 |
+| Lens/Skill **실행 계약**(interface) | Finance 자체 runtime contract 보유; Platform은 "공통 AI Orchestration"을 candidate로만 인정 | Shared AI (실행 mechanism) | Resolved | **RESOLVED — [ADR-0001](adr/ADR-0001-skill-lens-workflow-execution-ownership.md)** (실행 mechanism=Shared AI, 정의·선택·검증=Product/Domain; Finance는 병존+opt-in) |
 | Retriever / RAG · Embedding · Vector infra | Platform이 candidate로만 인정 (ADR-0015 §10 follow-up) | Shared AI Core (tenant-scoped) | Possible | **NEEDS_ADR** — 소유·범위·저장 결정 |
 | Finance **Knowledge Artifact** 저장(Lens/PolicyGuard 문서) | Finance (Markdown+WAS, no DB) | Finance 유지 | No | Preserve — RAG corpus와 구분 |
 | Product structured 사실(미납·예약·통증 score·journal metadata) | Product Backend / DB | Product (Shared AI는 Tool로 소비) | No | Preserve — direct DB 금지 |
@@ -101,8 +101,8 @@ Shared AI 설계가 상위 canonical source의 기존 결정을 조용히 재해
 NO_CONFLICT              : Provider 실행 경계, Prompt/Workflow/Policy=Product,
                           Lens semantics=Finance, Product SSOT direct-DB 금지,
                           tenant scope=전파만, physical runtime=deferred
-NEEDS_ADR               : Lens/Skill 실행 계약 소유, Retriever/RAG·Vector 소유,
-                          Evidence core/domain 경계, Finance runtime contract 관계
+RESOLVED (ADR-0001)     : Lens/Skill 실행 계약 소유(OD-1), Finance runtime contract 관계(OD-4)
+NEEDS_ADR               : Retriever/RAG·Vector 소유(OD-2/OD-6), Evidence core/domain 경계(OD-8)
 NEEDS_OWNER_REPO_UPDATE : (이번 Slice 없음 — 기존 owner 문서 수정 불필요)
 BLOCKING_CONFLICT       : 없음
 ```
