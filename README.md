@@ -25,6 +25,20 @@
 | `finance-harness-docs` | Finance Lens / PolicyGuard / Routing / Knowledge / Professional Standards |
 | `shared-ai-architecture` (이 repo) | Shared AI runtime responsibility boundary와 실행 모델 문서 |
 
+## Document map (RPL-97 Foundation)
+
+| 영역 | 문서 |
+| --- | --- |
+| 헌장·경계 | [shared-ai-charter](docs/shared-ai-charter.md) |
+| Canonical owner·충돌 | [source-of-truth-map](docs/source-of-truth-map.md) |
+| Product ↔ Shared AI 책임 | [product-ai-responsibility](docs/product-ai-responsibility.md) |
+| 실행 모델 | [execution-model](docs/execution-model.md) |
+| Capability 분리 | [skill-lens-tool-retriever-model](docs/skill-lens-tool-retriever-model.md) |
+| Consumer 검증 | [consumer-use-case-matrix](docs/consumer-use-case-matrix.md) |
+
+Decision status와 implementation status는 분리한다. 문서 존재가 구현·배포·runtime 활성화를
+의미하지 않는다.
+
 ## 상태
 
 ```text
