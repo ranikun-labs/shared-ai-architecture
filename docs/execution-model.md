@@ -79,20 +79,23 @@ Skill/Lens/Policy의 내용은 Product/Domain이 채운다.
 
 ## 7. Evidence
 
-모든 결과는 어떤 실행 근거에서 나왔는지를 Evidence로 동반한다.
+모든 결과는 어떤 실행 근거에서 나왔는지를 Evidence reference로 동반한다. 상세 ownership과
+logical field contract는 [ADR-0002](adr/ADR-0002-evidence-provenance-core-domain-boundary.md)가
+확정한다.
 
 ```text
-Evidence 후보 필드 (core envelope):
-  used_tools[]        (tool id, input scope, 결과 요약 ref)
-  retrieved_docs[]    (doc ref, tenant scope, timestamp)
-  applied_lenses[]    (lens key/version; semantics는 domain)
-  policy_decisions[]  (guard action 결과 ref)
-  model_calls[]       (provider, model alias, version)
-  timestamps / trace id
+Evidence Core Envelope (logical):
+  evidence identity / coarse kind / source refs
+  producer + execution/step correlation
+  product + tenant/workspace scope
+  observed/effective time separation
+  core version + typed Domain extension ref
 ```
 
-- Evidence **core envelope**는 Shared AI 후보, domain별 확장(예: Finance context snapshot,
-  lens version, market data timestamp)은 Domain 소유 → core/domain 경계는 NEEDS_ADR(OD-8).
+- Evidence **core envelope와 correlation mechanism**은 Shared AI 소유다. evidence admissibility,
+  기준시각 의미, uncertainty, Domain validation과 typed extension은 Product/Domain 소유다.
+- Source Evidence와 Model Interpretation, Evidence와 Provenance/Trace/Log/Audit/Result를 합치지 않는다.
+- raw Product payload를 기본 복제하지 않고 opaque source reference와 최소 metadata를 우선한다.
 
 ## 8. Explicit non-goals
 
@@ -108,7 +111,7 @@ Evidence 후보 필드 (core envelope):
 | # | Open decision | 분류 |
 | --- | --- | --- |
 | OD-4 | Finance 기존 runtime pipeline과 Shared AI 실행 골격의 관계 | **RESOLVED — [ADR-0001](adr/ADR-0001-skill-lens-workflow-execution-ownership.md)** (병존 + opt-in; Shared AI는 선언된 순서·gate를 재정의 없이 집행) |
-| OD-8 | Evidence core envelope vs domain extension 경계와 schema | NEEDS_ADR |
+| OD-8 | Evidence core envelope vs domain extension 경계와 schema | **RESOLVED — [ADR-0002](adr/ADR-0002-evidence-provenance-core-domain-boundary.md)** (Core envelope·correlation=Shared AI, admissibility·semantics·validation=Product/Domain) |
 | OD-9 | Workflow orchestration 구현 방식(코드 vs DSL vs LangGraph) | deferred |
 
 ## 10. Related canonical sources
