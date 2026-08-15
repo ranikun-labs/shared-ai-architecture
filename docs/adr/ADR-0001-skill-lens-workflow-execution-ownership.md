@@ -124,6 +124,12 @@ Execution Mechanism        = Shared AI 소유 (호출·순서·gate·timeout·tr
 > 이 step이 물리적으로 Shared AI engine 안에서 실행되더라도, **규칙과 순서 불변식은 Finance 소유**이며
 > Shared AI는 선택 결과를 바꿀 수 없다.
 
+**일반 규칙 (safety-critical domain)**: 위 Finance 사례는 예시가 아니라 일반 규칙이다.
+high-risk / safety-critical domain에서 D(bounded selection)는 Product/Domain이 선언한
+**deterministic selection policy의 실행만** 허용한다. Shared AI의 LLM inference가
+semantic selection을 직접 수행하는 것은 금지한다. LLM 기반 제안이 필요하면 advisory-only로만
+제공하며, 최종 selection ownership은 항상 Product/Domain에 남는다.
+
 ## 7. Workflow vs Agent
 
 canonical 구분으로 고정한다.
