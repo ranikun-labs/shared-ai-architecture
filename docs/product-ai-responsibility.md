@@ -55,7 +55,7 @@ Domain 결과 검증 / 결과 저장 / 업무 반영 / 최종 책임
 Model Invocation / Model Gateway (provider, key, alias, timeout, retry, fallback)
 Rate limit / concurrency / usage / cost metering
 Tool orchestration (Product Tool adapter 호출 규약)
-Retrieval orchestration (tenant-scoped; corpus·policy는 Product 소유)
+Retrieval orchestration과 projection lifecycle (tenant-scoped; semantic SoT·admission·corpus·policy는 Product 소유)
 Skill / Lens 실행 계약 (candidate, NEEDS_ADR — 정의는 Product/Finance)
 Evidence composition / provenance
 Prompt/model version awareness (버전 인지; prompt 내용은 Product)
@@ -67,6 +67,10 @@ Shared AI의 "orchestration"은 Tool/Retriever 등을 호출·실행하는 mecha
 의미한다. 어떤 Tool/Retriever/Lens를 선택할지에 대한 Product workflow semantics는 Shared AI가
 소유하지 않으며, 계속 §3.1의 `Product Workflow / Use Case(Skill) 정의`에 귀속된다
 (`ADR-0015` §7.4 정렬).
+
+Retriever projection을 durable하게 저장하는 경우 logical data·schema·migration owner는 Shared AI이고,
+source storage owner는 Product다. physical engine/topology는 [ADR-0003](adr/ADR-0003-retrieval-knowledge-runtime-ownership-lifecycle.md)이
+선택하지 않으며 RPL-103으로 deferred한다.
 
 ## 4. Multi-product / multi-tenant context
 
@@ -118,7 +122,7 @@ JOIN·직접 table read 금지), 그 projection의 SoT와 migration은 Product�
 | # | Open decision | 분류 |
 | --- | --- | --- |
 | OD-5 | Shared AI ↔ Product Tool 호출의 인증(service-to-service credential vs trusted context) | deferred (ADR-0015 follow-up) |
-| OD-6 | Retriever가 소비할 tenant-scoped corpus의 물리 저장 위치/소유 | NEEDS_ADR |
+| OD-6 | Retriever가 소비할 tenant-scoped corpus projection의 소유·lifecycle | **RESOLVED — [ADR-0003](adr/ADR-0003-retrieval-knowledge-runtime-ownership-lifecycle.md)** (source/admission/authorization=Product, runtime projection·lifecycle=Shared AI; 물리 technology=RPL-103 deferred) |
 | OD-7 | Provider 장애·Identity 비가용 시 fail-closed/fail-open 정책 (Carelog는 아직 candidate follow-up) | NEEDS_ADR |
 
 ## 9. Related canonical sources

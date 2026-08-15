@@ -143,11 +143,11 @@ Ownership 회귀 검증:
 | Tool orchestration 계약 (Product API adapter) | ✔ | |
 | Tenant scope 전파 | ✔ | |
 | Evidence core envelope | ✔ | |
-| Retriever 실행 계약 + tenant-scoped substrate | ✔ (use case 필요) — 단 물리 저장은 NEEDS_ADR | |
+| Retriever 실행 계약 + tenant-scoped projection lifecycle | ✔ (use case 필요) — ownership은 [ADR-0003](adr/ADR-0003-retrieval-knowledge-runtime-ownership-lifecycle.md) 확정 | |
 | Skill 실행 계약 (interface) | ✔ (정의는 Product) | |
 | Lens 실행 계약 | | ▶ Finance runtime contract 정합 후 (NEEDS_ADR) |
 | Agent runtime | | ▶ 동적 판단 use case 등장 시 |
-| Vector DB / embedding / reranker 확정 | | ▶ RAG use case ADR 시 |
+| Vector DB / embedding / reranker 확정 | | ▶ RPL-103 Runtime Technology ADR |
 | Workflow DSL / Skill Marketplace / Plugin Loader | | ▶ 훨씬 후순위 |
 
 ## 7. Related canonical sources

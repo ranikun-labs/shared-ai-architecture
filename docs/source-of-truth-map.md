@@ -87,7 +87,7 @@ Shared AI 설계가 상위 canonical source의 기존 결정을 조용히 재해
 | Finance Lens **semantics** | Finance | Finance | No | Keep |
 | Finance PolicyGuard / Output Validator / Routing **규칙** | Finance | Finance | No | Keep |
 | Lens/Skill **실행 계약**(interface) | Finance 자체 runtime contract 보유; Platform은 "공통 AI Orchestration"을 candidate로만 인정 | Shared AI (실행 mechanism) | Resolved | **RESOLVED — [ADR-0001](adr/ADR-0001-skill-lens-workflow-execution-ownership.md)** (실행 mechanism=Shared AI, 정의·선택·검증=Product/Domain; Finance는 병존+opt-in) |
-| Retriever / RAG · Embedding · Vector infra | Platform이 candidate로만 인정 (ADR-0015 §10 follow-up) | Shared AI Core (tenant-scoped) | Possible | **NEEDS_ADR** — 소유·범위·저장 결정 |
+| Retriever / RAG · Embedding · Index projection | Platform이 candidate로만 인정 (ADR-0015 §10 follow-up) | Product/Domain=semantic SoT·admission·selection, Shared AI=projection lifecycle·retrieval execution | Resolved | **RESOLVED — [ADR-0003](adr/ADR-0003-retrieval-knowledge-runtime-ownership-lifecycle.md)** (물리 technology는 RPL-103 deferred) |
 | Finance **Knowledge Artifact** 저장(Lens/PolicyGuard 문서) | Finance (Markdown+WAS, no DB) | Finance 유지 | No | Preserve — RAG corpus와 구분 |
 | Product structured 사실(미납·예약·통증 score·journal metadata) | Product Backend / DB | Product (Shared AI는 Tool로 소비) | No | Preserve — direct DB 금지 |
 | Evidence contract | Finance evidence/grounding semantics, Carelog Product/privacy semantics | Shared AI Core envelope + Product/Domain extension | Resolved | **RESOLVED — [ADR-0002](adr/ADR-0002-evidence-provenance-core-domain-boundary.md)** (공통 envelope·correlation만 Shared AI; admissibility·time·validation은 Product/Domain) |
@@ -103,7 +103,7 @@ NO_CONFLICT              : Provider 실행 경계, Prompt/Workflow/Policy=Produc
                           tenant scope=전파만, physical runtime=deferred
 RESOLVED (ADR-0001)     : Lens/Skill 실행 계약 소유(OD-1), Finance runtime contract 관계(OD-4)
 RESOLVED (ADR-0002)     : Evidence core envelope vs Product/Domain extension 경계(OD-8)
-NEEDS_ADR               : Retriever/RAG·Vector 소유(OD-2/OD-6)
+RESOLVED (ADR-0003)     : Retriever/RAG execution·projection lifecycle 소유(OD-2/OD-6)
 NEEDS_OWNER_REPO_UPDATE : (이번 Slice 없음 — 기존 owner 문서 수정 불필요)
 BLOCKING_CONFLICT       : 없음
 ```

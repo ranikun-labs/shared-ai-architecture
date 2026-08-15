@@ -37,6 +37,7 @@
 | Consumer 검증 | [consumer-use-case-matrix](docs/consumer-use-case-matrix.md) |
 | 실행 ownership ADR | [ADR-0001 Skill/Lens/Workflow Execution Ownership](docs/adr/ADR-0001-skill-lens-workflow-execution-ownership.md) (OD-1/OD-4 확정) |
 | Evidence/Provenance ADR | [ADR-0002 Evidence/Provenance Core와 Domain Extension 경계](docs/adr/ADR-0002-evidence-provenance-core-domain-boundary.md) (OD-8 확정) |
+| Retrieval/Knowledge ADR | [ADR-0003 Retrieval/Knowledge Runtime Ownership과 Projection Lifecycle](docs/adr/ADR-0003-retrieval-knowledge-runtime-ownership-lifecycle.md) (OD-2/OD-6 확정) |
 
 Decision status와 implementation status는 분리한다. 문서 존재가 구현·배포·runtime 활성화를
 의미하지 않는다.
