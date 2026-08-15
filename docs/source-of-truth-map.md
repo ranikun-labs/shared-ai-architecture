@@ -90,7 +90,7 @@ Shared AI 설계가 상위 canonical source의 기존 결정을 조용히 재해
 | Retriever / RAG · Embedding · Vector infra | Platform이 candidate로만 인정 (ADR-0015 §10 follow-up) | Shared AI Core (tenant-scoped) | Possible | **NEEDS_ADR** — 소유·범위·저장 결정 |
 | Finance **Knowledge Artifact** 저장(Lens/PolicyGuard 문서) | Finance (Markdown+WAS, no DB) | Finance 유지 | No | Preserve — RAG corpus와 구분 |
 | Product structured 사실(미납·예약·통증 score·journal metadata) | Product Backend / DB | Product (Shared AI는 Tool로 소비) | No | Preserve — direct DB 금지 |
-| Evidence contract | Finance provenance 일부 존재 | Shared AI Core envelope + Domain extension | Possible | **NEEDS_ADR** — core/domain 경계 정의 |
+| Evidence contract | Finance evidence/grounding semantics, Carelog Product/privacy semantics | Shared AI Core envelope + Product/Domain extension | Resolved | **RESOLVED — [ADR-0002](adr/ADR-0002-evidence-provenance-core-domain-boundary.md)** (공통 envelope·correlation만 Shared AI; admissibility·time·validation은 Product/Domain) |
 | Tenant/identity context | Platform(Identity) + Product(authz) | Shared AI는 scope 전파만 | No | Preserve — Shared AI는 authz 판단 안 함 |
 | Product DB ownership | Product/Foundation | Product | No | Preserve |
 | Shared AI physical runtime 위치/시점 | Platform (deferred) | Platform 유지 | No | Defer |
@@ -102,7 +102,8 @@ NO_CONFLICT              : Provider 실행 경계, Prompt/Workflow/Policy=Produc
                           Lens semantics=Finance, Product SSOT direct-DB 금지,
                           tenant scope=전파만, physical runtime=deferred
 RESOLVED (ADR-0001)     : Lens/Skill 실행 계약 소유(OD-1), Finance runtime contract 관계(OD-4)
-NEEDS_ADR               : Retriever/RAG·Vector 소유(OD-2/OD-6), Evidence core/domain 경계(OD-8)
+RESOLVED (ADR-0002)     : Evidence core envelope vs Product/Domain extension 경계(OD-8)
+NEEDS_ADR               : Retriever/RAG·Vector 소유(OD-2/OD-6)
 NEEDS_OWNER_REPO_UPDATE : (이번 Slice 없음 — 기존 owner 문서 수정 불필요)
 BLOCKING_CONFLICT       : 없음
 ```
