@@ -263,7 +263,7 @@ customer name을 Core metadata에 복제하지 않는다. `7→5→3`과 “개�
 
 | Item | Evidence Kind | Semantic Owner | Core Metadata | Domain Extension |
 | --- | --- | --- | --- | --- |
-| Journal context | `retrieved_content` 또는 Product-declared kind | Finance | journal source ref + user scope + execution | user-input/evidence quality 의미 |
+| Journal context | source 성격에 맞는 기존 `kind` 값 | Finance | journal source ref + user scope + execution | user-input/evidence-quality/기타 Finance-specific 분류는 Finance 도메인 extension(`typed/versioned`) |
 | Point-in-time Market Tool | `structured_fact` | Finance/external source | source/producer/observed/effective refs | 기준시각·source class·admissibility |
 | Finance Knowledge retrieval | `retrieved_content` | Finance | artifact ref/version + execution | Finance evidence quality |
 | Risk Lens interpretation | `model_interpretation` | Finance | supporting refs + lens/model producer | uncertainty/interpretation 의미 |
