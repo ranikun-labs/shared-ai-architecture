@@ -155,7 +155,7 @@ payload를 필요로 하면 Product-owned access/privacy 계약(ADR-0002 §10) �
 | `tenant_ref` | Required | Product Backend | Shared AI | Product | 예 | workspace 등. 누락 시 global fallback 금지 |
 | `principal_ref` | Required | Product Backend | Shared AI | Product | 예 | identity ref(trace/scope 파생용). 권한 자체 아님 |
 | `resource_refs[]` | Conditional | Product Backend | Shared AI | Product | 예 | typed opaque ref. tenant scope 안에 있어야 함 |
-| `authority_ref` | Conditional | Product Backend | Shared AI | Product | 예 | 현재 authority 재검증 seam 참조(§9). protected action에 필요 |
+| `authority_ref` | Conditional | Product Backend | Shared AI | Product | 예 | 현재 authoritative Product authority를 query-time에 resolve/revalidate할 수 있는 opaque locator/seam. bearer 권한 또는 standing grant이 아님 |
 | `request_id` | Required | Product Backend | 공통 | Product | — | 논리 요청 식별(멱등). 권한 증명 아님(§13) |
 | `execution_id` | Required | Shared AI | 공통 | Shared AI | — | 실행/evidence correlation(ADR-0002 `execution_ref`) |
 | `correlation_ref` | Optional | Product/Gateway | 공통 | 발급자 | — | 상위 요청 trace 연결 |
@@ -166,6 +166,8 @@ payload를 필요로 하면 Product-owned access/privacy 계약(ADR-0002 §10) �
 - Core가 `resource_refs`의 type namespace를 인지·전파할 수는 있으나 그 domain semantics를 해석하지 않는다.
 - `authority_ref`는 "언제·어디에 현재 authority를 물어야 하는가"의 seam reference이며, authorization 자체를
   Shared AI가 계산한다는 뜻이 아니다.
+- `authority_ref`는 bearer token이나 standing authorization이 아니며, T0에서의 존재만으로 T1 async/retry 실행이
+  자동 승인되지 않는다. 현재 authoritative Product 결정이 항상 우선한다.
 
 ## 7. Scope Model
 
@@ -217,13 +219,16 @@ ADR-0003 invariant를 실행 경계로 확장한다.
 위협: 내부 caller가 `tenant=A`와 `resource=B의 id`를 조합해 Shared AI에 전달.
 
 최소 invariant:
+- `resource_ref`는 Product가 tenant-bound 형태로 선언·표현한다(예: `customer C123 belongs to workspace W1`,
+  `journal J1 belongs to user U1`).
 - context 구성요소는 authority-consistent해야 한다. resource_ref는 선언된 tenant scope 안에 있어야 하며,
   불일치하면 거부(fail-closed).
 - resource scope는 parent tenant scope를 넓힐 수 없다.
 - identifier만으로 permission을 생성할 수 없다.
 
-단, Product business authz 규칙을 Shared AI에 복제하지 않는다. Shared AI는 **일관성/격리 seam**만
-집행하고, "P1이 C123을 볼 수 있는가"의 최종 판정은 Product authority(§9)에 남긴다.
+단, Product business authz 규칙을 Shared AI에 복제하지 않는다. Product는 resource membership semantics를
+소유하고, Shared AI는 declared parent tenant/context와 child/resource binding의 structural consistency/non-widening
+만 enforce한다. 즉 "P1이 C123을 볼 수 있는가"의 최종 판정은 Product authority(§9)에 남긴다.
 
 ## 11. Execute Request Boundary (conceptual)
 
