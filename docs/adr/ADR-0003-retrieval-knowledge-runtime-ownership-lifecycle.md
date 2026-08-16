@@ -230,6 +230,8 @@ retention·복구 의미를 Shared AI가 결정하지 않는다.
 ### Permission revoke와 scope reassignment
 
 권한 철회 또는 tenant/resource reassignment가 확인된 순간 기존 scope projection은 retrieval-ineligible다.
+retrieval의 eligibility는 query 시점의 현재 Product/Tenant/Resource 권한 및 scope를 기준으로 판단하며,
+projection/index/cache에 저장된 과거 scope만으로 authorization이 충족된 것으로 간주하지 않는다.
 재색인, cache 만료 또는 manual cleanup까지 계속 검색 가능하게 두는 것은 security failure다. transport나
 event mechanism은 deferred지만, 누락·지연을 탐지하고 reconciliation할 seam은 필요하다.
 
