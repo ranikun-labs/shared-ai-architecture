@@ -21,7 +21,7 @@ definition, 소유 주체, non-goal을 고정해 "Prompt=Skill", "Tool=Skill", "
 | **LLM Invocation** | 단순 모델 호출 | Shared AI | Shared AI |
 | **Structured Data** | 정확한 Product 사실값 (미납·예약·통증 score·journal metadata·market data) | Product Backend / DB | Shared AI는 Tool로 소비 |
 | **Tool** | 결정론적 capability (Product API, DB-backed query, 계산, aggregation, external market data) | Product (tool 의미·권한) | Shared AI (호출 규약) |
-| **Retriever / RAG** | 비정형 knowledge/history 검색 (상담 메모, 치료 기록, 계약서, 금융 문서, 과거 narrative) | Product (corpus·retrieval policy) | Shared AI (tenant-scoped substrate, candidate) |
+| **Retriever / RAG** | 비정형 knowledge/history 검색 (상담 메모, 치료 기록, 계약서, 금융 문서, 과거 narrative) | Product (semantic SoT·admission·corpus·retrieval policy) | Shared AI (tenant-scoped projection lifecycle·retrieval execution) |
 | **Skill** | 업무 단위 Application Use Case (= 무엇을 수행) | Product (정의) | Shared AI (실행 계약, candidate) |
 | **Lens** | 동일 context를 보는 관점 (= 어떤 관점으로 분석) | Domain (Finance=finance-harness-docs) | Shared AI (실행 계약, candidate) |
 | **Workflow** | 사전 정의된 실행 조합 | Product | Shared AI |
@@ -63,7 +63,8 @@ Lens  = 어떤 관점으로 분석할 것인가 (Therapy Progress, Risk, Earning
     = 상담 메모 / 치료 기록 / 계약서 / journal / 과거 narrative
     = per-tenant 비정형 user data
     → Retriever 대상. tenant-scoped. corpus·policy는 Product 소유.
-      물리 저장(pgvector 등)은 NEEDS_ADR (OD-6).
+      projection lifecycle·retrieval execution은 Shared AI 소유([ADR-0003](adr/ADR-0003-retrieval-knowledge-runtime-ownership-lifecycle.md)).
+      물리 저장·index technology는 RPL-103으로 deferred.
 
 (B) Finance Knowledge Artifact
     = Lens / PolicyGuard / Routing / Validator 문서 그 자체
@@ -101,7 +102,7 @@ Vector RAG(A)를 정확한 사실값의 SSOT로 쓰지 않는다. 사실값은 T
 | # | Open decision | 분류 |
 | --- | --- | --- |
 | OD-1 | Skill/Lens 실행 계약을 Shared AI가 소유 vs Model Gateway까지만 소유 | **RESOLVED — [ADR-0001](adr/ADR-0001-skill-lens-workflow-execution-ownership.md)** (실행 mechanism = Shared AI; 정의·선택·검증 = Product/Domain) |
-| OD-6 | RAG corpus(A) 물리 저장 위치/소유/tenant 격리 방식 | NEEDS_ADR |
+| OD-6 | RAG corpus(A) source와 runtime projection의 소유·lifecycle·tenant 격리 경계 | **RESOLVED — [ADR-0003](adr/ADR-0003-retrieval-knowledge-runtime-ownership-lifecycle.md)** (Source SoT=Product, projection/execution=Shared AI, technology=RPL-103 deferred) |
 | OD-10 | Tool 선언(capability declaration) 형식이 provider/product-neutral하게 필요한가 | deferred |
 
 ## 10. Related canonical sources

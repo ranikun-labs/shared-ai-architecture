@@ -53,10 +53,10 @@ Tenant scope 전파 (product / workspace / principal / resource)
 Evidence envelope 조립(어떤 Model/Tool/Retriever/Document decision에 근거했는지)
 ```
 
-### 3.2 Shared AI가 소유하는 것 (candidate — 실제 use case로 검토, NEEDS_ADR)
+### 3.2 Shared AI가 소유하는 제품 중립 capability (follow-up ADR에서 확정)
 
-`ADR-0015` §7.4와 §10은 아래를 "제품 중립 기술 Capability 후보"로만 인정하고, 실제 use case
-발생 시 후속 Decision으로 소유권을 확정하라고 명시했다. RPL-97 use case가 그 trigger다.
+`ADR-0015` §7.4와 §10은 아래를 처음에는 "제품 중립 기술 Capability 후보"로만 인정하고, 실제
+use case 발생 시 후속 Decision으로 소유권을 확정하라고 명시했다. RPL-97 use case가 그 trigger다.
 
 ```text
 Provider-neutral Tool orchestration 계약
@@ -68,7 +68,9 @@ Provider-neutral Retriever / RAG Adapter, Embedding Runtime, Vector Infrastructu
 
 > Skill/Lens **실행 계약**과 공통 orchestration의 소유는 [ADR-0001](adr/ADR-0001-skill-lens-workflow-execution-ownership.md)에서
 > confirmed(실행 mechanism = Shared AI, 정의·선택·검증 = Product/Domain)로 확정되었다. Retriever/RAG·
-> Embedding·Vector infra는 여전히 candidate(OD-2/OD-6)다.
+> Embedding·Index projection은 [ADR-0003](adr/ADR-0003-retrieval-knowledge-runtime-ownership-lifecycle.md)에서
+> confirmed(semantic SoT·admission·selection = Product/Domain, projection·lifecycle·retrieval execution =
+> Shared AI)로 확정되었다. 물리 technology는 RPL-103으로 deferred한다.
 
 → 상세 경계와 충돌은 [source-of-truth-map](source-of-truth-map.md),
 [skill-lens-tool-retriever-model](skill-lens-tool-retriever-model.md) 참조.
@@ -117,7 +119,7 @@ Platform 통신·배포·데이터 소유권    → harness-foundation-docs
 | # | Open decision | 분류 |
 | --- | --- | --- |
 | OD-1 | Shared AI가 "Skill/Lens 실행 계약"을 소유하는가, 아니면 Model Gateway까지만 소유하고 Skill/Lens 실행은 각 Product runtime에 두는가 | **RESOLVED — [ADR-0001](adr/ADR-0001-skill-lens-workflow-execution-ownership.md)** (실행 mechanism 소유, 정의·선택·검증은 Product/Domain) |
-| OD-2 | Retriever/RAG·Embedding·Vector infra의 Shared AI 소유 여부와 범위 | NEEDS_ADR (ADR-0015 §10 follow-up) |
+| OD-2 | Retriever/RAG·Embedding·Index projection의 Shared AI 소유 여부와 범위 | **RESOLVED — [ADR-0003](adr/ADR-0003-retrieval-knowledge-runtime-ownership-lifecycle.md)** (semantic SoT·admission·selection=Product/Domain, projection·lifecycle·execution=Shared AI) |
 | OD-3 | Shared AI physical runtime 위치(독립 Python runtime)와 도입 시점 | deferred (ADR-0013/0015) |
 | OD-4 | Finance의 기존 자체 runtime contract와 Shared AI 실행 계약의 관계(채택/병존) | **RESOLVED — [ADR-0001](adr/ADR-0001-skill-lens-workflow-execution-ownership.md)** (병존 + opt-in 채택) |
 
