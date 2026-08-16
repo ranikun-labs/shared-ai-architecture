@@ -88,7 +88,9 @@ resource / customer  (Carelog Customer, Finance journal 대상 등)
 1. **Tenant isolation 없는 global RAG 금지.** Retriever는 항상 scope로 필터한다.
 2. **Shared AI는 authz를 판단하지 않는다.** scope를 *전파*하고, 실제 접근 권한 판단은
    Product Backend가 한다(`authenticated-carelog-context.md`: identity는 authz의 입력일 뿐
-   Carelog-local authorization을 대체하지 않는다).
+   Carelog-local authorization을 대체하지 않는다). Execution Context 계약과 identity≠authz·
+   identifier≠authority·query-time 현재 authorization·child scope 비확대·fail-closed isolation은
+   [ADR-0004](adr/ADR-0004-execution-context-api-tenant-isolation.md)가 확정한다.
 3. **지금 물리 DB를 tenant별로 쪼개지 않는다.** Logical isolation(scope 필드·필터)과
    future physicalization seam을 구분한다. Platform의 "같은 물리 cluster ≠ 같은 owner" 원칙과 정렬.
 4. `identityUserId`/customer id는 Shared AI 저장 계층에서도 **weak reference**로만 쓰고,
@@ -121,9 +123,9 @@ JOIN·직접 table read 금지), 그 projection의 SoT와 migration은 Product�
 
 | # | Open decision | 분류 |
 | --- | --- | --- |
-| OD-5 | Shared AI ↔ Product Tool 호출의 인증(service-to-service credential vs trusted context) | deferred (ADR-0015 follow-up) |
+| OD-5 | Shared AI ↔ Product Tool 호출의 인증(service-to-service credential vs trusted context) | **부분 확정 — [ADR-0004](adr/ADR-0004-execution-context-api-tenant-isolation.md)** (신뢰/context 계약 WHAT=Product Backend가 authority, 무결성 검증=Shared AI; concrete credential mechanism HOW는 RPL-103 deferred) |
 | OD-6 | Retriever가 소비할 tenant-scoped corpus projection의 소유·lifecycle | **RESOLVED — [ADR-0003](adr/ADR-0003-retrieval-knowledge-runtime-ownership-lifecycle.md)** (source/admission/authorization=Product, runtime projection·lifecycle=Shared AI; 물리 technology=RPL-103 deferred) |
-| OD-7 | Provider 장애·Identity 비가용 시 fail-closed/fail-open 정책 (Carelog는 아직 candidate follow-up) | NEEDS_ADR |
+| OD-7 | Provider 장애·Identity 비가용 시 fail-closed/fail-open 정책 (Carelog는 아직 candidate follow-up) | **security-boundary 부분 — [ADR-0004](adr/ADR-0004-execution-context-api-tenant-isolation.md)** (Shared AI context 검증 fail-closed 확정); Product/Identity 가용성 domain fallback은 Product 소유로 미해소 |
 
 ## 9. Related canonical sources
 

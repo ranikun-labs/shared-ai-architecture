@@ -16,9 +16,12 @@ API endpoint마다 별도 AI pipeline을 하드코딩하지 않고, Skill이 Too
 
 ## 2. Core execution shape
 
+Execution Context 계약, identity≠authz, query-time 현재 authorization, tenant/resource isolation과
+fail-closed 경계는 [ADR-0004](adr/ADR-0004-execution-context-api-tenant-isolation.md)가 확정한다.
+
 ```text
 API Request (product + tenant scope + skill ref + input)
-  → Execution Context 구성 (scope 전파, provider 무관)
+  → Execution Context 구성 (scope 전파, provider 무관; authority=Product, 무결성 검증=Shared AI)
   → Skill 실행 계약   (무엇을 수행할지 = Product/Domain 소유 정의)
       ├─ Tool         (결정론적 사실값 / Product API·계산 / market data)
       ├─ Retriever    (비정형 history/knowledge, tenant-scoped)

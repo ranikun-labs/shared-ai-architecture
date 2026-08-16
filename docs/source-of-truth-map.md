@@ -92,6 +92,7 @@ Shared AI 설계가 상위 canonical source의 기존 결정을 조용히 재해
 | Product structured 사실(미납·예약·통증 score·journal metadata) | Product Backend / DB | Product (Shared AI는 Tool로 소비) | No | Preserve — direct DB 금지 |
 | Evidence contract | Finance evidence/grounding semantics, Carelog Product/privacy semantics | Shared AI Core envelope + Product/Domain extension | Resolved | **RESOLVED — [ADR-0002](adr/ADR-0002-evidence-provenance-core-domain-boundary.md)** (공통 envelope·correlation만 Shared AI; admissibility·time·validation은 Product/Domain) |
 | Tenant/identity context | Platform(Identity) + Product(authz) | Shared AI는 scope 전파만 | No | Preserve — Shared AI는 authz 판단 안 함 |
+| Execution Context·API 경계·tenant/resource isolation | Platform 인증 + Product authorization; Shared AI 실행 계약 | Shared AI=context 계약·무결성 검증·격리 seam, Product=authority/query-time 판정 | Resolved | **RESOLVED — [ADR-0004](adr/ADR-0004-execution-context-api-tenant-isolation.md)** (identity≠authz, identifier≠authority, query-time authority, child scope 비확대, fail-closed; OD-5 부분·OD-7 security-boundary) |
 | Product DB ownership | Product/Foundation | Product | No | Preserve |
 | Shared AI physical runtime 위치/시점 | Platform (deferred) | Platform 유지 | No | Defer |
 
@@ -104,6 +105,8 @@ NO_CONFLICT              : Provider 실행 경계, Prompt/Workflow/Policy=Produc
 RESOLVED (ADR-0001)     : Lens/Skill 실행 계약 소유(OD-1), Finance runtime contract 관계(OD-4)
 RESOLVED (ADR-0002)     : Evidence core envelope vs Product/Domain extension 경계(OD-8)
 RESOLVED (ADR-0003)     : Retriever/RAG execution·projection lifecycle 소유(OD-2/OD-6)
+RESOLVED (ADR-0004)     : Execution Context·API 경계·tenant/resource isolation·query-time authority
+                          (OD-5 부분: 신뢰/context 계약 WHAT; OD-7 security-boundary 부분)
 NEEDS_OWNER_REPO_UPDATE : (이번 Slice 없음 — 기존 owner 문서 수정 불필요)
 BLOCKING_CONFLICT       : 없음
 ```
