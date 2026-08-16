@@ -142,6 +142,7 @@ Ownership 회귀 검증:
 | Model Gateway (provider/key/alias/timeout/usage/trace) | ✔ | |
 | Tool orchestration 계약 (Product API adapter) | ✔ | |
 | Tenant scope 전파 | ✔ | |
+| Execution Context 계약 + tenant/resource isolation (identity≠authz, query-time authority) | ✔ — [ADR-0004](adr/ADR-0004-execution-context-api-tenant-isolation.md) 확정 | |
 | Evidence core envelope | ✔ | |
 | Retriever 실행 계약 + tenant-scoped projection lifecycle | ✔ (use case 필요) — ownership은 [ADR-0003](adr/ADR-0003-retrieval-knowledge-runtime-ownership-lifecycle.md) 확정 | |
 | Skill 실행 계약 (interface) | ✔ (정의는 Product) | |

@@ -70,7 +70,9 @@ Provider-neutral Retriever / RAG Adapter, Embedding Runtime, Vector Infrastructu
 > confirmed(실행 mechanism = Shared AI, 정의·선택·검증 = Product/Domain)로 확정되었다. Retriever/RAG·
 > Embedding·Index projection은 [ADR-0003](adr/ADR-0003-retrieval-knowledge-runtime-ownership-lifecycle.md)에서
 > confirmed(semantic SoT·admission·selection = Product/Domain, projection·lifecycle·retrieval execution =
-> Shared AI)로 확정되었다. 물리 technology는 RPL-103으로 deferred한다.
+> Shared AI)로 확정되었다. 물리 technology는 RPL-103으로 deferred한다. Execution Context 계약·tenant/resource
+> isolation·identity≠authz·query-time authority는 [ADR-0004](adr/ADR-0004-execution-context-api-tenant-isolation.md)가
+> confirmed로 확정한다(OD-5 부분, OD-7 security-boundary).
 
 → 상세 경계와 충돌은 [source-of-truth-map](source-of-truth-map.md),
 [skill-lens-tool-retriever-model](skill-lens-tool-retriever-model.md) 참조.
