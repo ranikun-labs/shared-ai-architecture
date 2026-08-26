@@ -39,6 +39,7 @@
 | Evidence/Provenance ADR | [ADR-0002 Evidence/Provenance Core와 Domain Extension 경계](docs/adr/ADR-0002-evidence-provenance-core-domain-boundary.md) (OD-8 확정) |
 | Retrieval/Knowledge ADR | [ADR-0003 Retrieval/Knowledge Runtime Ownership과 Projection Lifecycle](docs/adr/ADR-0003-retrieval-knowledge-runtime-ownership-lifecycle.md) (OD-2/OD-6 확정) |
 | Execution Context/Isolation ADR | [ADR-0004 Execution Context·API Boundary·Tenant Isolation](docs/adr/ADR-0004-execution-context-api-tenant-isolation.md) (identity≠authz·query-time authority·fail-closed isolation; OD-5 부분·OD-7 security-boundary 확정) |
+| Phase 1 Runtime Placement ADR | [ADR-0005 Platform Core Modular Monolith Boundary](docs/adr/ADR-0005-runtime-placement-platform-core-modular-monolith-boundary.md) (RPL-103 Stage A accepted/effective 2026-08-26; Foundation ADR-0018 coordinated acceptance) |
 
 Decision status와 implementation status는 분리한다. 문서 존재가 구현·배포·runtime 활성화를
 의미하지 않는다.
@@ -48,7 +49,9 @@ Decision status와 implementation status는 분리한다. 문서 존재가 구�
 ```text
 repository: bootstrap
 runtime code: 없음 (문서 전용)
-Shared AI physical runtime: not_started / deferred (harness-foundation ADR-0015, ADR-0013 기준)
+Shared AI Phase 1 placement: platform-core same-JVM logical module (accepted/effective 2026-08-26)
+Shared AI runtime implementation: not_started
+Runtime language/framework/version: deferred to RPL-103 Technology Stage
 ```
 
 RPL-97 Foundation 문서는 `docs/RPL-97-shared-ai-architecture-foundation` branch에서 작성되며,
