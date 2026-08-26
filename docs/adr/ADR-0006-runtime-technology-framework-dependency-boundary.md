@@ -2,29 +2,40 @@
 
 | 항목 | 값 |
 | --- | --- |
-| status | Proposed — owner decision recorded, independent review pending |
+| status | Accepted — effective 2026-08-26; canonical main projection pending PR #7 merge |
 | jira | RPL-103 Stage B |
 | predecessor | [ADR-0005](ADR-0005-runtime-placement-platform-core-modular-monolith-boundary.md) / Foundation ADR-0018 |
 | ADR namespace | shared-ai-architecture 로컬 (`ADR-000N`) |
 | owner decision | JVM Core + optional future Python ML Worker |
 | approved by | 박성환 (owner decision) |
+| owner acceptance | approved 2026-08-26 |
 | decision date | 2026-08-26 |
-| independent review | pending |
+| independent review | `RPL103_STAGE_B_DELTA_REVIEW_PASS` (BLOCKER 0 / MAJOR 0 / MINOR 0) |
+| reviewed candidate SHA | `0b0da2fbd20b38879f497639ab32fd95812fb658` |
+| review reference | shared-ai-architecture PR #7 |
+| reviewed / approved / effective | 2026-08-26 |
 | scope | Phase 1 runtime language, application framework, AI integration과 dependency boundary |
 
 ---
 
 ## 1. Status
 
-**Proposed. Owner decision recorded; independent Architecture Review와 canonical merge는 pending이다.**
+**Accepted. Effective 2026-08-26 by owner approval and independent delta review.**
 
-이 ADR은 review candidate다. 문서가 존재하거나 branch에 commit됐다는 사실은 canonical
-acceptance, 구현 또는 배포를 의미하지 않는다.
+Independent review result는 `RPL103_STAGE_B_DELTA_REVIEW_PASS`다
+(BLOCKER 0 / MAJOR 0 / MINOR 0). Reviewed candidate는
+`0b0da2fbd20b38879f497639ab32fd95812fb658`이며 shared-ai-architecture PR #7에서 검토됐다.
+이 branch의 acceptance projection은 canonical `main`에 PR #7이 merge되기 전까지
+canonical main projection으로 주장하지 않는다.
+
+이 ADR은 accepted owner decision의 review projection이다. 문서가 존재하거나 branch에 commit됐다는
+사실은 canonical main projection, 구현 또는 배포를 의미하지 않는다.
 
 ```text
 RPL-103 Stage A = CANONICAL COMPLETE
-RPL-103 Stage B owner decision = recorded
-RPL-103 Stage B independent review = pending
+RPL-103 Stage B owner decision = accepted / effective 2026-08-26
+RPL-103 Stage B independent review = RPL103_STAGE_B_DELTA_REVIEW_PASS
+Canonical main projection = pending PR #7 merge
 RPL-103 overall = IN PROGRESS
 Shared AI implementation = not_started
 ```
@@ -435,7 +446,7 @@ contract discipline 비용을 §6 규칙으로 명시적으로 수용한다. Cor
 - [ADR-0005](ADR-0005-runtime-placement-platform-core-modular-monolith-boundary.md)
 - `harness-foundation-docs` ADR-0018 (Stage A placement owner record)
 
-Independent review는 최소 다음을 확인한다.
+Independent review (`RPL103_STAGE_B_DELTA_REVIEW_PASS`)는 다음을 확인했다.
 
 - Stage A placement와 canonical ownership invariant가 보존되는가
 - Kotlin/Java public contract와 Spring AI adapter boundary가 충분히 명시적인가
@@ -444,5 +455,6 @@ Independent review는 최소 다음을 확인한다.
 - compatibility anchor와 Gateway/Platform Core build isolation이 정확한가
 - Python/LangGraph trigger가 future option을 보존하되 Phase 1 runtime을 만들지 않는가
 
-이 ADR이 review를 통과하고 canonical `main`에 merge되기 전까지 Stage B를 canonical complete로
-표현하지 않는다. Merge 후에도 production implementation은 별도 task다.
+이 ADR은 owner acceptance와 independent review를 통과했지만, PR #7이 canonical `main`에
+merge되기 전까지 repository canonical projection을 주장하지 않는다. Merge 후에도 production
+implementation은 별도 task이며 RPL-103 전체는 Stage B 이후에도 `IN PROGRESS`다.

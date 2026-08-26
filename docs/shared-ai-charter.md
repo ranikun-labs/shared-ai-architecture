@@ -71,8 +71,9 @@ Provider-neutral Retriever / RAG Adapter, Embedding Runtime, Vector Infrastructu
 > Embedding·Index projection은 [ADR-0003](adr/ADR-0003-retrieval-knowledge-runtime-ownership-lifecycle.md)에서
 > confirmed(semantic SoT·admission·selection = Product/Domain, projection·lifecycle·retrieval execution =
 > Shared AI)로 확정되었다. Phase 1 물리 technology owner decision은
-> [proposed ADR-0006](adr/ADR-0006-runtime-technology-framework-dependency-boundary.md)에 기록됐으며
-> independent review와 canonical merge가 pending이다. Execution Context 계약·tenant/resource
+> [accepted ADR-0006](adr/ADR-0006-runtime-technology-framework-dependency-boundary.md)에
+> 기록됐고 2026-08-26 effective가 됐다(`RPL103_STAGE_B_DELTA_REVIEW_PASS`). PR #7의 canonical
+> main projection은 pending이다. Execution Context 계약·tenant/resource
 > isolation·identity≠authz·query-time authority는 [ADR-0004](adr/ADR-0004-execution-context-api-tenant-isolation.md)가
 > confirmed로 확정한다(OD-5 부분, OD-7 security-boundary).
 
@@ -124,7 +125,7 @@ Platform 통신·배포·데이터 소유권    → harness-foundation-docs
 | --- | --- | --- |
 | OD-1 | Shared AI가 "Skill/Lens 실행 계약"을 소유하는가, 아니면 Model Gateway까지만 소유하고 Skill/Lens 실행은 각 Product runtime에 두는가 | **RESOLVED — [ADR-0001](adr/ADR-0001-skill-lens-workflow-execution-ownership.md)** (실행 mechanism 소유, 정의·선택·검증은 Product/Domain) |
 | OD-2 | Retriever/RAG·Embedding·Index projection의 Shared AI 소유 여부와 범위 | **RESOLVED — [ADR-0003](adr/ADR-0003-retrieval-knowledge-runtime-ownership-lifecycle.md)** (semantic SoT·admission·selection=Product/Domain, projection·lifecycle·execution=Shared AI) |
-| OD-3 | Shared AI physical runtime 위치와 도입 시점 | **RESOLVED — [ADR-0005](adr/ADR-0005-runtime-placement-platform-core-modular-monolith-boundary.md) + Foundation ADR-0018** (Phase 1 `platform-core` same-JVM logical module, effective 2026-08-26; independent runtime은 evidence-triggered extraction option). Language/framework는 [proposed ADR-0006](adr/ADR-0006-runtime-technology-framework-dependency-boundary.md)에 기록됐고 구현은 deferred |
+| OD-3 | Shared AI physical runtime 위치와 도입 시점 | **RESOLVED — [ADR-0005](adr/ADR-0005-runtime-placement-platform-core-modular-monolith-boundary.md) + Foundation ADR-0018** (Phase 1 `platform-core` same-JVM logical module, effective 2026-08-26; independent runtime은 evidence-triggered extraction option). Language/framework는 [accepted ADR-0006](adr/ADR-0006-runtime-technology-framework-dependency-boundary.md)에 기록됐고 구현은 deferred |
 | OD-4 | Finance의 기존 자체 runtime contract와 Shared AI 실행 계약의 관계(채택/병존) | **RESOLVED — [ADR-0001](adr/ADR-0001-skill-lens-workflow-execution-ownership.md)** (병존 + opt-in 채택) |
 
 ## 7. Related canonical sources
