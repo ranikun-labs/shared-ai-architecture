@@ -120,9 +120,11 @@ Shared AI Kotlin code는 다음 규칙을 따른다.
 2. Java와 Kotlin은 Platform Core의 같은 Java toolchain target을 사용한다.
 3. application core는 imperative다. Coroutine/Flow는 기본 programming model이 아니다.
 4. Coroutine/Flow는 이후 실제 필요가 증명된 adapter boundary에서만 검토한다.
-5. cross-module public API는 Java-friendly해야 한다.
-6. Kotlin `Result`, `Flow`, function type과 default parameter에 의존하는 API를 module
-   contract에 노출하지 않는다.
+5. cross-module / Java-facing public API는 Java-friendly JVM contract여야 한다.
+6. cross-module / Java-facing public API는 `suspend` API, `kotlin.Result`,
+   `kotlinx.coroutines.flow.Flow`, Kotlin function type, `kotlin.Pair`, `kotlin.Triple`, Java 사용이
+   Kotlin default parameter에 의존하는 API 또는 adapter 밖의 provider/framework-specific
+   Kotlin type에 의존해서는 안 된다. 이 금지는 Shared AI 내부의 Kotlin 사용을 제한하지 않는다.
 7. Kotlin 내부에서는 `data class`, `sealed interface`, exhaustive `when`을 Evidence/Result
    variant에 권장한다.
 8. extension function은 명시적인 adapter/mapping transformation으로 제한한다.
@@ -327,9 +329,13 @@ Official sources:
 ### 15.2 Current source reality와 architectural requirement
 
 Freshly verified `platform-services/main` at
-`31636aa43937a0119318de0fe7bc2e51ebfda3d0` uses Boot 3.4.5, Cloud 2024.0.1,
-Java toolchain 17과 Gradle 8.13. 따라서 Spring AI 2.0.x를 사용하는 Platform Core는 현재
-공통 baseline을 그대로 사용할 수 없다.
+`74fd5a3001c1bf5e200de6a73afc3765685809c0` uses Boot 3.4.5, Cloud 2024.0.1,
+Java toolchain 17과 Gradle 8.13. 이전 authoring reference
+`31636aa43937a0119318de0fe7bc2e51ebfda3d0`에서 fresh main까지의 변경은 root `AGENTS.md`
+추가뿐이며 application code, Gradle, dependency 또는 runtime topology 변경은 없다. 따라서
+Stage B runtime analysis는 materially valid하다. `AGENTS.md`는 repository policy이며 runtime
+implementation evidence가 아니다. Spring AI 2.0.x를 사용하는 Platform Core는 현재 공통
+baseline을 그대로 사용할 수 없다.
 
 Platform Core runtime/build baseline은 Gateway와 독립적으로 진화할 수 있어야 한다.
 구현 track은 적절한 build/version isolation을 먼저 확립하고, Platform Core를 supported
