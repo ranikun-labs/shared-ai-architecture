@@ -2,26 +2,31 @@
 
 | 항목 | 값 |
 | --- | --- |
-| status | In Review / decision open |
+| status | Accepted |
 | jira | RPL-103 Stage A |
 | predecessor | RPL-102 / [ADR-0004](ADR-0004-execution-context-api-tenant-isolation.md) |
 | ADR namespace | shared-ai-architecture 로컬 (`ADR-000N`) |
-| coordinated owner decision | `harness-foundation-docs` ADR-0018 candidate |
+| coordinated owner decision | `harness-foundation-docs` ADR-0018 / PR #23 |
+| independent review | `RPL103_PLACEMENT_REVIEW_PASS` (BLOCKER 0 / MAJOR 0 / MINOR 1 non-blocking) |
+| approved by | 박성환 (owner decision) |
+| reviewed / approved / effective | 2026-08-26 |
 | scope | Phase 1 physical placement와 extraction boundary만 결정 |
 
 ---
 
 ## 1. Status
 
-**In Review. Decision proposal: Option B.**
+**Accepted. Effective from 2026-08-26.**
 
-이 ADR은 독립적으로 Platform Foundation을 변경하지 않는다. `harness-foundation-docs`
-ADR-0018과 양쪽 owner review가 완료되어 두 decision이 accepted 되기 전에는 현재
-canonical placement가 유지된다.
+Independent Architecture Review 결과는 `RPL103_PLACEMENT_REVIEW_PASS`다. 이 ADR과
+`harness-foundation-docs` ADR-0018은 2026-08-26 coordinated owner acceptance를 받았다.
+어느 한 ADR도 단독으로 Architecture를 변경하지 않았으며, 양쪽 decision이 함께 accepted
+됨으로써 Phase 1 placement가 effective가 됐다. Canonical `main` projection은 coordinated
+PR #6 / Foundation PR #23 merge 전까지 완료로 주장하지 않는다.
 
 ```text
-Placement proposal selected for review
-!= canonical acceptance
+Phase 1 placement = accepted / effective
+Canonical main projection = pending coordinated merge
 != RPL-103 complete
 != runtime technology selected
 != implementation started
@@ -56,7 +61,7 @@ latency로 같은 JVM의 blast radius를 키울 수 있다.
 - same-JVM ownership 및 dependency rule
 - blast-radius acceptance와 최소 evaluation criteria
 - future process extraction trigger와 extraction seam
-- ADR-0017 및 source-of-truth map의 placement assumption partial supersession proposal
+- ADR-0017 및 source-of-truth map의 placement assumption partial supersession
 
 ### Scope Out
 
@@ -129,10 +134,10 @@ Shared AI = platform-core logical module
 - AI executor/provider/streaming saturation이 Identity latency에 영향을 줄 수 있음
 - dependency/classpath compatibility를 process 전체에서 관리해야 함
 
-## 6. Decision Proposal
+## 6. Decision — Option B
 
 **Phase 1 placement로 Option B를 선택한다.** 이 선택은 coordinated Foundation
-ADR-0018이 accepted 될 때 효력을 갖는다.
+ADR-0018과 함께 2026-08-26 accepted / effective가 됐다.
 
 ```text
 platform-services
@@ -308,12 +313,12 @@ architecture 승격과 도구에 맞춘 domain package 왜곡은 금지한다.
 
 ## 14. Partial Supersession
 
-이 ADR과 coordinated Foundation ADR-0018이 accepted 되면 다음 physical placement
-assumption만 부분 대체한다.
+이 ADR과 coordinated Foundation ADR-0018의 2026-08-26 acceptance는 다음 physical
+placement assumption만 부분 대체한다.
 
 | Existing source | Partially superseded placement assumption | Replacement |
 | --- | --- | --- |
-| Foundation ADR-0017 §7 | Shared AI를 `platform-services/platform-core`에 넣지 않음 | Shared AI Phase 1은 `platform-core` logical module 후보 |
+| Foundation ADR-0017 §7 | Shared AI를 `platform-services/platform-core`에 넣지 않음 | Shared AI Phase 1 selected placement는 `platform-core` logical module + same Spring MVC JVM |
 | Foundation ADR-0017 §7 | future independent Python Runtime을 기본 placement로 표현 | independent runtime은 evidence-triggered extraction option; language는 deferred |
 | `source-of-truth-map.md` §3/§4 | `platform-services` 밖 independent Python Runtime 및 위치/시점 전체 deferred | Phase 1 placement는 Platform Core same JVM; technology와 activation은 deferred |
 
@@ -327,8 +332,8 @@ assumption만 부분 대체한다.
 - implementation/runtime support/release 상태 분리
 - independent extraction 가능성과 trigger-based physicalization 원칙
 
-Foundation owner repo의 ADR-0018 승인 없이 이 ADR 하나가 ADR-0017을 대체했다고 주장하지
-않는다.
+이 ADR 하나가 독립적으로 ADR-0017을 대체했다고 주장하지 않는다. Partial supersession은
+Foundation ADR-0018과의 coordinated acceptance로만 성립한다.
 
 ## 15. Technology Decisions Deferred
 
@@ -355,7 +360,7 @@ fresh official compatibility source와 추가 JVM comparison evidence를 검토�
 | `platform-services` | `origin/main` | `31636aa43937a0119318de0fe7bc2e51ebfda3d0` |
 | `shared-ai-runtime` | comparison evidence branch HEAD | `e23cb4f1c4f02114bda08d1d2b99ba56911f0476`; no `main` ref observed |
 
-Feature/review checkout은 canonical source로 사용하지 않았다. SHA는 이번 decision candidate의
+Feature/review checkout은 canonical source로 사용하지 않았다. SHA는 이번 acceptance decision의
 재현 anchor이며 영구 invariant가 아니다.
 
 ## 17. Consequences and Follow-up
@@ -374,7 +379,7 @@ Feature/review checkout은 canonical source로 사용하지 않았다. SHA는 �
 
 후속:
 
-- Foundation ADR-0018 independent review/approval
+- coordinated PR #6 / Foundation PR #23의 canonical main projection 검토
 - RPL-104 및 JVM comparison evidence 검토
 - RPL-103 Technology Stage 계속; RPL-103은 아직 complete가 아님
 - accepted 이후에만 Platform Core structural implementation 별도 수행

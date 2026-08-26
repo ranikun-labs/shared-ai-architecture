@@ -38,9 +38,10 @@ Shared AI 설계가 상위 canonical source의 기존 결정을 조용히 재해
 - 내부 통신 기본값 HTTP/JSON, 내부 호출은 Gateway 우회 안 함 (ADR-0015 §7.1)
 - 각 Service가 자기 DB 소유, cross-service DB 직접 접근·FK·JOIN 금지 (ADR-0015 §7.8)
 - ai_runtime_db = AI Runtime Server 소유 논리 DB (boundaries §10.1)
-- Current accepted Foundation은 Shared AI를 platform-services 밖 future independent Python Runtime으로
-  기술한다(boundaries §13.3). ADR-0005 / Foundation ADR-0018은 이 placement assumption만
-  partial supersede하는 Option B를 review 중이며, 양쪽 owner acceptance 전에는 효력이 없다.
+- 이전 Foundation은 Shared AI를 platform-services 밖 future independent Python Runtime으로
+  기술했다(boundaries §13.3). ADR-0005 / Foundation ADR-0018의 2026-08-26 coordinated
+  acceptance는 이 placement assumption만 partial supersede했다. Phase 1 selected placement는
+  `platform-core` same-JVM logical module이며 independent runtime은 evidence-triggered extraction option이다.
 - Shared AI runtime implementation = not_started. Language/framework/version은 RPL-103 Technology Stage로 deferred.
 - Candidate before promotion, Cloud/AI 결과는 자동 Truth 아님 (master §6.4~6.5)
 ```
@@ -96,7 +97,7 @@ Shared AI 설계가 상위 canonical source의 기존 결정을 조용히 재해
 | Tenant/identity context | Platform(Identity) + Product(authz) | Shared AI는 scope 전파만 | No | Preserve — Shared AI는 authz 판단 안 함 |
 | Execution Context·API 경계·tenant/resource isolation | Platform 인증 + Product authorization; Shared AI 실행 계약 | Shared AI=context 계약·무결성 검증·격리 seam, Product=authority/query-time 판정 | Resolved | **RESOLVED — [ADR-0004](adr/ADR-0004-execution-context-api-tenant-isolation.md)** (identity≠authz, identifier≠authority, query-time authority, child scope 비확대, fail-closed; OD-5 부분·OD-7 security-boundary) |
 | Product DB ownership | Product/Foundation | Product | No | Preserve |
-| Shared AI Phase 1 physical placement | Platform (현재 accepted: 외부 independent runtime; technology deferred) | `platform-core` same-JVM logical module | Owner coordination required | **IN REVIEW — [ADR-0005](adr/ADR-0005-runtime-placement-platform-core-modular-monolith-boundary.md) + Foundation ADR-0018 acceptance 필요** |
+| Shared AI Phase 1 physical placement | Platform (이전 assumption: 외부 independent runtime) | `platform-core` same-JVM logical module | Resolved by coordinated owners | **ACCEPTED — [ADR-0005](adr/ADR-0005-runtime-placement-platform-core-modular-monolith-boundary.md) + Foundation ADR-0018, effective 2026-08-26** |
 
 충돌 분류 요약:
 
@@ -109,7 +110,8 @@ RESOLVED (ADR-0002)     : Evidence core envelope vs Product/Domain extension 경
 RESOLVED (ADR-0003)     : Retriever/RAG execution·projection lifecycle 소유(OD-2/OD-6)
 RESOLVED (ADR-0004)     : Execution Context·API 경계·tenant/resource isolation·query-time authority
                           (OD-5 부분: 신뢰/context 계약 WHAT; OD-7 security-boundary 부분)
-NEEDS_OWNER_REPO_UPDATE : Shared AI Phase 1 placement — ADR-0005와 Foundation ADR-0018 coordinated review
+RESOLVED (ADR-0005 / Foundation ADR-0018): Phase 1 placement — platform-core same-JVM logical module
+NEEDS_OWNER_REPO_UPDATE : 없음
 BLOCKING_CONFLICT       : 없음
 ```
 
