@@ -122,7 +122,7 @@ Platform 통신·배포·데이터 소유권    → harness-foundation-docs
 | --- | --- | --- |
 | OD-1 | Shared AI가 "Skill/Lens 실행 계약"을 소유하는가, 아니면 Model Gateway까지만 소유하고 Skill/Lens 실행은 각 Product runtime에 두는가 | **RESOLVED — [ADR-0001](adr/ADR-0001-skill-lens-workflow-execution-ownership.md)** (실행 mechanism 소유, 정의·선택·검증은 Product/Domain) |
 | OD-2 | Retriever/RAG·Embedding·Index projection의 Shared AI 소유 여부와 범위 | **RESOLVED — [ADR-0003](adr/ADR-0003-retrieval-knowledge-runtime-ownership-lifecycle.md)** (semantic SoT·admission·selection=Product/Domain, projection·lifecycle·execution=Shared AI) |
-| OD-3 | Shared AI physical runtime 위치(독립 Python runtime)와 도입 시점 | deferred (ADR-0013/0015) |
+| OD-3 | Shared AI physical runtime 위치와 도입 시점 | **IN REVIEW — [ADR-0005](adr/ADR-0005-runtime-placement-platform-core-modular-monolith-boundary.md)**는 Phase 1 `platform-core` same-JVM placement를 선택하며 Foundation ADR-0018 coordinated acceptance가 필요. Language/framework/version과 구현은 deferred. |
 | OD-4 | Finance의 기존 자체 runtime contract와 Shared AI 실행 계약의 관계(채택/병존) | **RESOLVED — [ADR-0001](adr/ADR-0001-skill-lens-workflow-execution-ownership.md)** (병존 + opt-in 채택) |
 
 ## 7. Related canonical sources
