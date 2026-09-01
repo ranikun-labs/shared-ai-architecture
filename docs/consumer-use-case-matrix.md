@@ -15,7 +15,8 @@ trace해서 검증한다. 각 요청은 다음 골격을 통과해야 한다.
 
 ```text
 Request → Product Backend → Shared AI → Skill → Tool/Retriever/Lens/Policy
-        → Model → Evidence → Response
+        → Model → typed result → runtime validation → Product validation
+        → Evidence/Trace → Outcome → Response or authorized effect
 ```
 
 세 use case 모두 PASS해야 이 Foundation이 성립한다.
@@ -32,9 +33,10 @@ Request → Product Backend → Shared AI → Skill → Tool/Retriever/Lens/Poli
 | Retriever | tenant-scoped | Treatment History(상담·치료 narrative) — 비정형 |
 | Lens | Carelog domain | Therapy Progress |
 | Policy | Carelog domain | Therapy Safety Policy (진단/처방 대체 금지) |
-| Model | Shared AI | 요약 생성 |
+| Model | Shared AI | reasoning/요약 생성; output은 untrusted |
+| Validation | Shared AI + Carelog | mechanical schema/context validation 후 Carelog semantic validation |
 | Evidence | Shared AI core + Carelog 확장 | 사용한 appointment/measurement tool, 검색된 기록 ref, lens/version |
-| Response | Carelog | 검증 후 사용자에게 정리 제공 |
+| Outcome/Response | Carelog | `SUCCESS`/`UNKNOWN` 등 outcome을 해석하고 검증 후 제공 |
 
 Composition:
 
@@ -64,8 +66,9 @@ TreatmentPreparation Skill
 | Tool/Context | Carelog | Contract Context (계약 정보) |
 | Retriever | tenant-scoped | Conversation/연락 기록 — 비정형 |
 | Model | Shared AI | 정리 생성 |
+| Validation | Shared AI + Carelog | mechanical result/context validation 후 business rule 검증 |
 | Evidence | Shared AI core | payment tool 결과 ref, 검색된 대화 ref |
-| Response | Carelog | 검증 후 제공 |
+| Outcome/Response | Carelog | 검증 후 제공; 자동 mutation 없음 |
 
 Composition:
 
@@ -83,7 +86,7 @@ RentalPaymentReview Skill
 
 ## 4. Finance Investment Review
 
-> "내 투자 판단에서 놓친 리스크를 복기해줘."
+> "NVIDIA 투자를 계속 가져가도 되는지 분석"
 
 | 단계 | 소유 | 내용 |
 | --- | --- | --- |
@@ -93,9 +96,10 @@ RentalPaymentReview Skill
 | Retriever | tenant-scoped | 과거 journal/narrative |
 | Lens | finance-harness-docs | Risk Lens, Journal-Review Lens (semantics는 Finance 소유) |
 | Policy | finance-harness-docs | PolicyGuard (매수/매도·목표가·손절가 미제공, 과거 평가 금지) |
-| Model | Shared AI | 복기 질문/체크리스트 생성 |
+| Model | Shared AI | bounded plan 안에서 reasoning; output은 untrusted |
+| Validation | Shared AI + Finance | mechanical result/evidence-reference validation 후 Finance semantic validator |
 | Evidence | Shared AI core + Finance 확장 | lens version, context snapshot, market data timestamp |
-| Response | Finance | Output Validator 통과 후 제공 |
+| Outcome/Response | Finance | `SUCCESS`/`UNKNOWN`/`REJECTED`/`FAILED`를 해석하고 Output Validator 통과 후 제공 |
 
 Composition:
 
@@ -107,12 +111,13 @@ InvestmentReview Skill
   + Evidence
 ```
 
-- 경계 준수: **금융 Lens 판단 내용은 finance-harness-docs 소유.** Shared AI는 실행 계약/Model
-  Gateway/trace만(OD-1/OD-4, NEEDS_ADR). Finance의 canonical pipeline(Input Guard → intent →
+- 경계 준수: **금융 Lens 판단 내용은 finance-harness-docs 소유.** Shared AI는 실행 mechanism/
+  Model Gateway/trace만(ADR-0001 OD-1/OD-4 확정). Finance의 canonical pipeline(Input Guard → intent →
   guard action → lens/redirect → template → Output Validator)을 Shared AI가 재정의하지 않는다.
   point-in-time grounding으로 사후 결과와 당시 판단을 분리.
 
-**판정: PASS (경계 보존 기준). Lens 실행 계약 소유는 OD-1/OD-4로 이월되며 이 use case의 경계 유효성에는 영향 없음.**
+**판정: PASS (경계 보존 기준). Lens 실행 mechanism은 ADR-0001에 따라 Shared AI가 담당하고,
+Lens semantics와 Finance routing/policy/validator는 Finance가 계속 소유한다.**
 
 ## 5. Cross-use-case 검증 요약
 
@@ -123,7 +128,8 @@ InvestmentReview Skill
 | 사실값=Tool, history=Retriever 분리 | PASS | PASS | PASS |
 | tenant scope 전파 | PASS | PASS | PASS |
 | Domain Lens/Policy semantics=Product/Domain | PASS | PASS | PASS |
-| LLM 결과 검증 후 반영(자동 mutation 없음) | PASS | PASS | PASS |
+| LLM 결과는 untrusted이며 mechanical + semantic validation 후 반영 | PASS | PASS | PASS |
+| Side-effect는 별도 authorization/idempotency gate를 통과 | PASS | PASS | PASS |
 | Agent 강제 안 함(Workflow로 충분) | PASS | PASS | PASS |
 
 Ownership 회귀 검증:
@@ -145,10 +151,11 @@ Ownership 회귀 검증:
 | Execution Context 계약 + tenant/resource isolation (identity≠authz, query-time authority) | ✔ — [ADR-0004](adr/ADR-0004-execution-context-api-tenant-isolation.md) 확정 | |
 | Evidence core envelope | ✔ | |
 | Retriever 실행 계약 + tenant-scoped projection lifecycle | ✔ (use case 필요) — ownership은 [ADR-0003](adr/ADR-0003-retrieval-knowledge-runtime-ownership-lifecycle.md) 확정 | |
-| Skill 실행 계약 (interface) | ✔ (정의는 Product) | |
-| Lens 실행 계약 | | ▶ Finance runtime contract 정합 후 (NEEDS_ADR) |
-| Agent runtime | | ▶ 동적 판단 use case 등장 시 |
-| Vector DB / embedding / reranker 확정 | | ▶ RPL-103 Runtime Technology ADR |
+| Skill 실행 계약 (interface) | ✔ (정의/선택=Product, execution mechanism=Shared AI) | [ADR-0001](adr/ADR-0001-skill-lens-workflow-execution-ownership.md) |
+| Lens 실행 계약 | ✔ (정의/선택/검증=Product/Domain, execution mechanism=Shared AI) | [ADR-0001](adr/ADR-0001-skill-lens-workflow-execution-ownership.md) |
+| Agent runtime | | ▶ §10 trigger를 충족하는 동적 판단 use case 등장 시 |
+| Retrieval persistence baseline | ✔ PostgreSQL + pgvector baseline | [ADR-0006](adr/ADR-0006-runtime-technology-framework-dependency-boundary.md) |
+| Embedding model / reranker | | ▶ deferred — [ADR-0007](adr/ADR-0007-current-openai-gpt-provider-target.md) |
 | Workflow DSL / Skill Marketplace / Plugin Loader | | ▶ 훨씬 후순위 |
 
 ## 7. Related canonical sources

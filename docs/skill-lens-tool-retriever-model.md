@@ -4,7 +4,7 @@
 | --- | --- |
 | status | draft (RPL-97 Foundation) |
 | owner | shared-ai-architecture |
-| 상위 canonical | `ADR-0015` §7.4, `finance-lens-authoring-standard.md`, `finance-knowledge-storage-decision.md` |
+| 상위 canonical | `ADR-0015` §7.4, [ADR-0001](adr/ADR-0001-skill-lens-workflow-execution-ownership.md), [ADR-0007](adr/ADR-0007-current-openai-gpt-provider-target.md), `finance-lens-authoring-standard.md`, `finance-knowledge-storage-decision.md` |
 
 ---
 
@@ -22,8 +22,8 @@ definition, 소유 주체, non-goal을 고정해 "Prompt=Skill", "Tool=Skill", "
 | **Structured Data** | 정확한 Product 사실값 (미납·예약·통증 score·journal metadata·market data) | Product Backend / DB | Shared AI는 Tool로 소비 |
 | **Tool** | 결정론적 capability (Product API, DB-backed query, 계산, aggregation, external market data) | Product (tool 의미·권한) | Shared AI (호출 규약) |
 | **Retriever / RAG** | 비정형 knowledge/history 검색 (상담 메모, 치료 기록, 계약서, 금융 문서, 과거 narrative) | Product (semantic SoT·admission·corpus·retrieval policy) | Shared AI (tenant-scoped projection lifecycle·retrieval execution) |
-| **Skill** | 업무 단위 Application Use Case (= 무엇을 수행) | Product (정의) | Shared AI (실행 계약, candidate) |
-| **Lens** | 동일 context를 보는 관점 (= 어떤 관점으로 분석) | Domain (Finance=finance-harness-docs) | Shared AI (실행 계약, candidate) |
+| **Skill** | 업무 단위 Application Use Case (= 무엇을 수행) | Product (정의) | Shared AI (실행 계약) |
+| **Lens** | 동일 context를 보는 관점 (= 어떤 관점으로 분석) | Domain (Finance=finance-harness-docs) | Shared AI (실행 계약) |
 | **Workflow** | 사전 정의된 실행 조합 | Product | Shared AI |
 | **Agent** | 실행 중 next action 동적 판단 | Product | Shared AI (예외적) |
 | **Policy / Guardrail** | 허용/금지 범위 | Product/Domain (규칙 원문) | Shared AI (gate 호출) |
@@ -51,8 +51,9 @@ Lens  = 어떤 관점으로 분석할 것인가 (Therapy Progress, Risk, Earning
 
 > 이 지점이 RPL-97 working hypothesis와 기존 canonical의 긴장점이다. 가설은 "Skill이 Shared AI
 > Execution Core 안에 산다"였으나, ADR-0015는 Workflow/Prompt/Policy를 Product에 귀속시킨다.
-> 결론: **Skill 정의 = Product, Skill 실행 계약 = Shared AI(candidate)** 로 분리한다.
-> 실행 계약을 Shared AI가 실제로 소유할지는 NEEDS_ADR(OD-1).
+> 결론: **Skill 정의 = Product, Skill 실행 계약 = Shared AI** 로 분리한다.
+> 실행 mechanism 소유는 [ADR-0001](adr/ADR-0001-skill-lens-workflow-execution-ownership.md)에서
+> 확정됐고, 정의·선택·domain validation semantics는 계속 Product/Domain에 남는다.
 
 ## 5. Retriever / RAG vs Knowledge Artifact (혼동 금지)
 
@@ -86,13 +87,20 @@ Vector RAG(A)를 정확한 사실값의 SSOT로 쓰지 않는다. 사실값은 T
 - 소유: Shared AI (provider adapter, key/secret, model alias, timeout/retry/fallback,
   rate limit/concurrency, usage/cost, observability, provider 장애 처리). ADR-0015 §7.4 정렬.
 - Prompt 내용은 Product 소유. Model Gateway는 prompt/model **version 인지**만 한다.
+- 현재 첫 model-inference target은 [ADR-0007](adr/ADR-0007-current-openai-gpt-provider-target.md)의
+  OpenAI API / GPT family다. Spring AI는 adapter/integration library이며, exact GPT model/version,
+  embeddings와 reranker는 deferred다.
+- LLM output은 structured shape를 가져도 untrusted output이다. schema/mechanical validation 뒤에
+  Product/Domain semantic validation을 거쳐야 Product result가 된다([execution-model](execution-model.md)).
 
 ## 8. Explicit non-goals
 
 ```text
 - Skill Marketplace / Dynamic Plugin Loader / Workflow DSL 정의
+- 자유 LLM routing 또는 generic Agent Framework를 Phase 1 기본값으로 도입
+- Pydantic AI/Python type을 neutral contract에 노출
 - Lens 실행 계약의 wire schema 확정
-- embedding model / chunk size / reranker / vector DB 선택
+- exact embedding/reranker/chunk/ranking policy 및 dedicated vector DB 선택
 - Finance Lens semantics를 이 repo로 복사
 - Universal Tool/Adapter interface를 모든 Product에 강제 (foundation의 "Global Enum 강제 금지" 정렬)
 ```

@@ -76,15 +76,16 @@ Shared AI 설계가 상위 canonical source의 기존 결정을 조용히 재해
 - Lens activation gate / runtime_loadable / routable / fixture_refs 의미
 ```
 
-### Potential Shared-AI-owned (RPL-97 제안)
+### Shared-AI execution mechanisms (RPL-97 + accepted follow-ups)
 
 ```text
 - Model Gateway (provider adapter, key, alias, timeout/retry, rate limit, usage/cost, trace)
 - Tool orchestration 실행 계약 (Product Tool/API adapter 호출 규약)
-- Retriever 실행 계약 + tenant-scoped RAG substrate (candidate)
-- Skill/Lens 실행 계약 (interface만; 정의·semantics는 Product/Finance)
+- Retriever 실행 계약 + tenant-scoped RAG substrate
+- Skill/Lens 실행 계약 (interface/mechanism만; 정의·semantics는 Product/Finance)
 - Evidence / Provenance envelope
 - Tenant scope 전파
+- LLM reasoning과 runtime/mechanical enforcement의 실행 경계
 ```
 
 ## 4. Ownership / conflict matrix
@@ -93,12 +94,13 @@ Shared AI 설계가 상위 canonical source의 기존 결정을 조용히 재해
 | --- | --- | --- | --- | --- |
 | Provider 실행·key·model alias·timeout·rate limit·usage·trace | Shared AI (ADR-0015 §7.4) | Shared AI | No | Keep |
 | Current model-inference provider target | Shared AI (ADR-0015 §7.4) | Shared AI — OpenAI API / GPT family for current target | Resolved | **RESOLVED — [ADR-0007](adr/ADR-0007-current-openai-gpt-provider-target.md)** (first concrete Spring AI model adapter; provider-neutral contract 유지; permanent/exclusive choice 아님) |
+| LLM output trust와 runtime enforcement | Product Prompt/Workflow/Policy semantics | Shared AI — untrusted output 처리, mechanical validation, capability/side-effect gate, execution state, outcome/trace | No | **DOCUMENTED — [execution-model](execution-model.md) §3~§8** (Prompt says X ≠ System guarantees X; structured shape ≠ semantic correctness) |
 | AI Token Streaming transport (SSE) | Platform (ADR-0015 §7.5) | Platform 유지, Shared AI는 기술 구현 | No | Preserve |
 | 제품별 System Prompt / Workflow / Domain Policy | Product (ADR-0015 §7.4) | Product | No | Preserve |
 | Finance Lens **semantics** | Finance | Finance | No | Keep |
 | Finance PolicyGuard / Output Validator / Routing **규칙** | Finance | Finance | No | Keep |
 | Lens/Skill **실행 계약**(interface) | Finance 자체 runtime contract 보유; Platform은 "공통 AI Orchestration"을 candidate로만 인정 | Shared AI (실행 mechanism) | Resolved | **RESOLVED — [ADR-0001](adr/ADR-0001-skill-lens-workflow-execution-ownership.md)** (실행 mechanism=Shared AI, 정의·선택·검증=Product/Domain; Finance는 병존+opt-in) |
-| Retriever / RAG · Embedding · Index projection | Platform이 candidate로만 인정 (ADR-0015 §10 follow-up) | Product/Domain=semantic SoT·admission·selection, Shared AI=projection lifecycle·retrieval execution | Resolved | **RESOLVED — [ADR-0003](adr/ADR-0003-retrieval-knowledge-runtime-ownership-lifecycle.md)**; Phase 1 persistence candidate=PostgreSQL+pgvector(+필요 시 FTS), Spring AI VectorStore=adapter ([accepted ADR-0006](adr/ADR-0006-runtime-technology-framework-dependency-boundary.md); PR #7 canonical projection complete) |
+| Retriever / RAG · Embedding · Index projection | Platform이 candidate로만 인정 (ADR-0015 §10 follow-up) | Product/Domain=semantic SoT·admission·selection, Shared AI=projection lifecycle·retrieval execution | Resolved | **RESOLVED — [ADR-0003](adr/ADR-0003-retrieval-knowledge-runtime-ownership-lifecycle.md)**; Phase 1 persistence baseline=PostgreSQL+pgvector(+필요 시 FTS), Spring AI VectorStore=adapter ([accepted ADR-0006](adr/ADR-0006-runtime-technology-framework-dependency-boundary.md); exact embedding/reranker는 deferred) |
 | Finance **Knowledge Artifact** 저장(Lens/PolicyGuard 문서) | Finance (Markdown+WAS, no DB) | Finance 유지 | No | Preserve — RAG corpus와 구분 |
 | Product structured 사실(미납·예약·통증 score·journal metadata) | Product Backend / DB | Product (Shared AI는 Tool로 소비) | No | Preserve — direct DB 금지 |
 | Evidence contract | Finance evidence/grounding semantics, Carelog Product/privacy semantics | Shared AI Core envelope + Product/Domain extension | Resolved | **RESOLVED — [ADR-0002](adr/ADR-0002-evidence-provenance-core-domain-boundary.md)** (공통 envelope·correlation만 Shared AI; admissibility·time·validation은 Product/Domain) |
@@ -113,7 +115,7 @@ Shared AI 설계가 상위 canonical source의 기존 결정을 조용히 재해
 ```text
 NO_CONFLICT              : Provider 실행 경계, Prompt/Workflow/Policy=Product,
                           Lens semantics=Finance, Product SSOT direct-DB 금지,
-                          tenant scope=전파만
+                          tenant scope=전파만, LLM reasoning=untrusted output
 RESOLVED (ADR-0001)     : Lens/Skill 실행 계약 소유(OD-1), Finance runtime contract 관계(OD-4)
 RESOLVED (ADR-0002)     : Evidence core envelope vs Product/Domain extension 경계(OD-8)
 RESOLVED (ADR-0003)     : Retriever/RAG execution·projection lifecycle 소유(OD-2/OD-6)
@@ -134,6 +136,9 @@ BLOCKING_CONFLICT       : 없음
    합의로 ADR을 만든 뒤 확정한다.
 3. 상위 canonical과 이 repo 문서가 충돌하면 상위 canonical이 이긴다
    (`ADR-0015` > boundaries/master > 이 repo).
+4. Runtime Evolution policy는 [execution-model](execution-model.md)의 bounded default와
+   enforcement boundary를 따른다. 이 policy가 Product/Domain semantics나 상위 Platform 결정을
+   재정의하지 않는다.
 
 ## 6. Related canonical sources
 
@@ -142,3 +147,4 @@ BLOCKING_CONFLICT       : 없음
 - `harness-foundation-docs/docs/architecture/repository-service-boundaries.md` §9, §10, §13.3
 - `carelog-architecture/architecture/ownership-map.md`, `contracts/authenticated-carelog-context.md`
 - `finance-harness-docs/00-core/0-d-knowledge-architecture/finance-knowledge-storage-decision.md`
+- [execution-model](execution-model.md)
