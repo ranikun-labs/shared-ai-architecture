@@ -5,7 +5,7 @@
 | status | draft (RPL-97 Foundation) |
 | owner | shared-ai-architecture |
 | jira | RPL-97 |
-| decision posture | Architecture foundation. Phase 1 placement/technology와 current model-inference provider target은 ADR로 확정; 구현·배포 activation은 별도 |
+| decision posture | Architecture foundation. Phase 1 placement/technology와 current model-inference provider target은 ADR로 확정; bounded workflow와 LLM-controlled-by-code는 실행 모델 policy로 고정; 구현·배포 activation은 별도 |
 | 상위 canonical | `harness-foundation-docs` `ADR-0015` §7.4, `ADR-0013`, `repository-service-boundaries.md` §9 |
 
 ---
@@ -51,12 +51,19 @@ Provider 장애 처리
 기술적 Safety와 Streaming(SSE) 기술
 Tenant scope 전파 (product / workspace / principal / resource)
 Evidence envelope 조립(어떤 Model/Tool/Retriever/Document decision에 근거했는지)
+Execution Context mechanics와 tenant/resource isolation enforcement
+Structured result parsing과 runtime/mechanical validation
+Tool capability allowlist·argument·budget·timeout·cancellation enforcement
+Execution/step state lifecycle mechanics
+Execution outcome state와 provider/tool/retrieval correlation trace
 ```
 
-### 3.2 Shared AI가 소유하는 제품 중립 capability (follow-up ADR에서 확정)
+### 3.2 Shared AI가 소유하는 제품 중립 capability (accepted boundary; implementation deferred)
 
 `ADR-0015` §7.4와 §10은 아래를 처음에는 "제품 중립 기술 Capability 후보"로만 인정하고, 실제
-use case 발생 시 후속 Decision으로 소유권을 확정하라고 명시했다. RPL-97 use case가 그 trigger다.
+use case 발생 시 후속 Decision으로 소유권을 확정하라고 명시했다. RPL-97 use case와 후속
+ADR-0001~0007이 실행 mechanism·evidence·context·runtime boundary를 확정했으며, 구현은 여전히
+별도 work다.
 
 ```text
 Provider-neutral Tool orchestration 계약
@@ -75,8 +82,8 @@ Provider-neutral Retriever / RAG Adapter, Embedding Runtime, Vector Infrastructu
 > 기록됐고 2026-08-26 effective가 됐다(`RPL103_STAGE_B_DELTA_REVIEW_PASS`). PR #7은 canonical
 > `main`에 merge됐다. `platform-services`의 RPL-106 canonical neutral foundation도 존재한다.
 > 현재 첫 production model-inference provider target은 [ADR-0007](adr/ADR-0007-current-openai-gpt-provider-target.md)의
-> OpenAI API / GPT family다. Exact GPT model/version·model alias mapping·embeddings·reranker는
-> deferred다. Execution Context 계약·tenant/resource
+> OpenAI API / GPT family다. 이는 permanent/exclusive provider 선택이 아니다. Exact GPT
+> model/version·model alias mapping·embeddings·reranker는 deferred다. Execution Context 계약·tenant/resource
 > isolation·identity≠authz·query-time authority는 [ADR-0004](adr/ADR-0004-execution-context-api-tenant-isolation.md)가
 > confirmed로 확정한다(OD-5 부분, OD-7 security-boundary).
 
@@ -93,6 +100,7 @@ Domain Context·입력 데이터 선택     → Product
 Corpus 선택 / Retrieval Policy      → Product
 Domain 결과 검증 / 최종 책임        → Product
 결과 저장과 업무 반영               → Product
+Semantic/domain validation과 final mutation/business authority → Product
 Finance Lens semantics / PolicyGuard / Output Validator 규칙 → finance-harness-docs
 Carelog business rule / Customer·Workspace ownership          → carelog-architecture
 Platform 통신·배포·데이터 소유권    → harness-foundation-docs
@@ -108,6 +116,9 @@ Platform 통신·배포·데이터 소유권    → harness-foundation-docs
 4. **LLM 결과는 검증 없이 Product mutation으로 승격하지 않는다.** Evidence·Human Review 유지.
    `harness-foundation` Candidate/Promotion 원칙과 정렬.
 5. **Product별 if/else를 Shared AI Core에 쌓지 않는다.** Provider-neutral, product-neutral.
+6. **LLM은 코드가 통제하는 probabilistic component다.** Prompt는 reasoning guidance이고,
+   correctness·authorization·tool permission·validation·side effect·trace는 runtime code가
+   enforce한다. 상세 pipeline은 [execution-model](execution-model.md)에 둔다.
 
 ## 5. Explicit non-goals (이번 Slice)
 
@@ -117,6 +128,8 @@ Platform 통신·배포·데이터 소유권    → harness-foundation-docs
 - exact GPT model/version / model alias mapping 확정
 - pgvector schema / embedding model / chunk size / reranker 확정
 - LangGraph workflow / RAGFlow deployment / GraphRAG 확정
+- 자유 LLM Agent routing 또는 generic Agent Framework 도입
+- Pydantic AI/Python runtime 선택(향후 same-workflow PoC 후보일 뿐)
 - Skill Marketplace / Dynamic Plugin Loader / Workflow DSL
 - dedicated Vector DB / full Prompt Management Platform
 - Finance Lens 판단 내용 또는 Carelog business rule의 Shared AI 이전
@@ -131,6 +144,7 @@ Platform 통신·배포·데이터 소유권    → harness-foundation-docs
 | OD-2 | Retriever/RAG·Embedding·Index projection의 Shared AI 소유 여부와 범위 | **RESOLVED — [ADR-0003](adr/ADR-0003-retrieval-knowledge-runtime-ownership-lifecycle.md)** (semantic SoT·admission·selection=Product/Domain, projection·lifecycle·execution=Shared AI) |
 | OD-3 | Shared AI physical runtime 위치와 도입 시점 | **RESOLVED — [ADR-0005](adr/ADR-0005-runtime-placement-platform-core-modular-monolith-boundary.md) + Foundation ADR-0018** (Phase 1 `platform-core` same-JVM logical module, effective 2026-08-26; independent runtime은 evidence-triggered extraction option). Language/framework는 [accepted ADR-0006](adr/ADR-0006-runtime-technology-framework-dependency-boundary.md)에 기록됐고 구현은 deferred |
 | OD-4 | Finance의 기존 자체 runtime contract와 Shared AI 실행 계약의 관계(채택/병존) | **RESOLVED — [ADR-0001](adr/ADR-0001-skill-lens-workflow-execution-ownership.md)** (병존 + opt-in 채택) |
+| OD-9 | Workflow orchestration 구현 방식과 Agent complexity threshold | **deferred — [execution-model](execution-model.md) §9~§12의 bounded default·evidence gate를 따름** |
 
 ## 7. Related canonical sources
 

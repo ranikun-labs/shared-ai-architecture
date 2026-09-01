@@ -4,7 +4,7 @@
 | --- | --- |
 | status | draft (RPL-97 Foundation) |
 | owner | shared-ai-architecture |
-| 상위 canonical | `ADR-0015` §7.4, boundaries §10~§11, `authenticated-carelog-context.md` |
+| 상위 canonical | `ADR-0015` §7.4, boundaries §10~§11, `authenticated-carelog-context.md`, [execution-model](execution-model.md) |
 
 ---
 
@@ -24,7 +24,9 @@ Client
       → Product Tool/API Adapter → Product Backend → Product DB   (사실값 조회)
       → Retriever                                                  (비정형 history)
       → Model Gateway → LLM
-  → Evidence + Result
+      → typed result → runtime/mechanical validation
+  → Product semantic/policy validation
+  → Evidence + Result / authorized effect decision
   → Product Backend        (검증·저장·업무 반영, 최종 책임)
 ```
 
@@ -47,6 +49,7 @@ Domain Policy / Guardrail 규칙 원문
 Corpus 선택 / Retrieval Policy
 Domain 결과 검증 / 결과 저장 / 업무 반영 / 최종 책임
 제품별 규제·승인·보존 정책
+Side-effect의 business permission과 final mutation/command authority
 ```
 
 ### 3.2 Shared AI 소유
@@ -56,11 +59,16 @@ Model Invocation / Model Gateway (provider, key, alias, timeout, retry, fallback
 Rate limit / concurrency / usage / cost metering
 Tool orchestration (Product Tool adapter 호출 규약)
 Retrieval orchestration과 projection lifecycle (tenant-scoped; semantic SoT·admission·corpus·policy는 Product 소유)
-Skill / Lens 실행 계약 (candidate, NEEDS_ADR — 정의는 Product/Finance)
+Skill / Lens 실행 계약 (confirmed — mechanism은 Shared AI, 정의·선택·검증은 Product/Finance)
 Evidence composition / provenance
 Prompt/model version awareness (버전 인지; prompt 내용은 Product)
 AI-specific trace / evaluation 실행 substrate
 기술적 Safety / Streaming(SSE)
+Structured result parsing / runtime-mechanical validation
+Capability allowlist·argument·context·budget·timeout·cancellation enforcement
+Outcome state와 execution/provider/tool/retrieval correlation trace
+Execution/step state lifecycle mechanics
+Side-effect의 mechanical gate와 duplicate/retry safety enforcement
 ```
 
 Shared AI의 "orchestration"은 Tool/Retriever 등을 호출·실행하는 mechanism(호출 순서·규약)만
@@ -69,8 +77,22 @@ Shared AI의 "orchestration"은 Tool/Retriever 등을 호출·실행하는 mecha
 (`ADR-0015` §7.4 정렬).
 
 Retriever projection을 durable하게 저장하는 경우 logical data·schema·migration owner는 Shared AI이고,
-source storage owner는 Product다. physical engine/topology는 [ADR-0003](adr/ADR-0003-retrieval-knowledge-runtime-ownership-lifecycle.md)이
-선택하지 않으며 RPL-103으로 deferred한다.
+source storage owner는 Product다. Phase 1 retrieval persistence baseline은
+[ADR-0006](adr/ADR-0006-runtime-technology-framework-dependency-boundary.md)의 PostgreSQL +
+pgvector(+필요 시 FTS)이며, provider/model과 semantic corpus policy를 결정하지 않는다.
+
+### 3.3 LLM trust boundary와 side effect
+
+Prompt와 structured-output 선언은 reasoning guidance와 transport shape를 제공할 뿐, semantic
+truth나 권한을 보장하지 않는다. Shared AI는 LLM 결과를 untrusted probabilistic output으로
+취급하고, runtime/mechanical validation을 통과시킨 뒤 Product semantic/policy validation으로
+넘긴다. Product가 허용한 side effect도 allowlist, current context, argument, timeout,
+idempotency와 retry safety gate를 통과해야 실행된다.
+
+최소 outcome은 `SUCCESS`, `ABSTAIN / UNKNOWN`, `REJECTED`, `FAILED`다. 세부 provider/tool/
+retrieval/validation 원인은 Shared AI trace에 남기며, Product-facing giant exception hierarchy를
+만들지 않는다. 자세한 pipeline·tool gate·trace 기준은 [execution-model](execution-model.md) §2~§8에
+있다.
 
 ## 4. Multi-product / multi-tenant context
 
@@ -116,6 +138,8 @@ JOIN·직접 table read 금지), 그 projection의 SoT와 migration은 Product�
 - Shared AI가 Product authz 판단을 대체
 - Shared AI가 Product DB에 직접 접속/FK/JOIN
 - LLM/Retriever 결과를 검증 없이 Product 사실/mutation으로 승격
+- free-form LLM Agent routing 또는 generic Agent Framework를 Phase 1 기본값으로 도입
+- Pydantic AI/Python worker를 현재 runtime으로 선택
 - 물리 tenant DB 분리 설계(이번 Slice)
 ```
 
@@ -133,3 +157,4 @@ JOIN·직접 table read 금지), 그 projection의 SoT와 migration은 Product�
 - `harness-foundation-docs/docs/architecture/repository-service-boundaries.md` §10, §11
 - `carelog-architecture/contracts/authenticated-carelog-context.md`
 - `carelog-architecture/architecture/ownership-map.md`
+- [execution-model](execution-model.md)
