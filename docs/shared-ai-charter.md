@@ -5,7 +5,7 @@
 | status | draft (RPL-97 Foundation) |
 | owner | shared-ai-architecture |
 | jira | RPL-97 |
-| decision posture | Architecture foundation. 구현·배포·framework 확정 아님 |
+| decision posture | Architecture foundation. Phase 1 placement/technology와 current model-inference provider target은 ADR로 확정; 구현·배포 activation은 별도 |
 | 상위 canonical | `harness-foundation-docs` `ADR-0015` §7.4, `ADR-0013`, `repository-service-boundaries.md` §9 |
 
 ---
@@ -72,8 +72,11 @@ Provider-neutral Retriever / RAG Adapter, Embedding Runtime, Vector Infrastructu
 > confirmed(semantic SoT·admission·selection = Product/Domain, projection·lifecycle·retrieval execution =
 > Shared AI)로 확정되었다. Phase 1 물리 technology owner decision은
 > [accepted ADR-0006](adr/ADR-0006-runtime-technology-framework-dependency-boundary.md)에
-> 기록됐고 2026-08-26 effective가 됐다(`RPL103_STAGE_B_DELTA_REVIEW_PASS`). PR #7의 canonical
-> main projection은 pending이다. Execution Context 계약·tenant/resource
+> 기록됐고 2026-08-26 effective가 됐다(`RPL103_STAGE_B_DELTA_REVIEW_PASS`). PR #7은 canonical
+> `main`에 merge됐다. `platform-services`의 RPL-106 canonical neutral foundation도 존재한다.
+> 현재 첫 production model-inference provider target은 [ADR-0007](adr/ADR-0007-current-openai-gpt-provider-target.md)의
+> OpenAI API / GPT family다. Exact GPT model/version·model alias mapping·embeddings·reranker는
+> deferred다. Execution Context 계약·tenant/resource
 > isolation·identity≠authz·query-time authority는 [ADR-0004](adr/ADR-0004-execution-context-api-tenant-isolation.md)가
 > confirmed로 확정한다(OD-5 부분, OD-7 security-boundary).
 
@@ -111,6 +114,7 @@ Platform 통신·배포·데이터 소유권    → harness-foundation-docs
 ```text
 - Python/FastAPI runtime 구현
 - 실제 API schema 확정
+- exact GPT model/version / model alias mapping 확정
 - pgvector schema / embedding model / chunk size / reranker 확정
 - LangGraph workflow / RAGFlow deployment / GraphRAG 확정
 - Skill Marketplace / Dynamic Plugin Loader / Workflow DSL

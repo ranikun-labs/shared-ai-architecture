@@ -42,10 +42,14 @@ Shared AI 설계가 상위 canonical source의 기존 결정을 조용히 재해
   기술했다(boundaries §13.3). ADR-0005 / Foundation ADR-0018의 2026-08-26 coordinated
   acceptance는 이 placement assumption만 partial supersede했다. Phase 1 selected placement는
   `platform-core` same-JVM logical module이며 independent runtime은 evidence-triggered extraction option이다.
-- Shared AI runtime implementation = not_started. RPL-103 Stage B owner decision은
+- Shared AI neutral foundation은 `platform-services`의 RPL-106으로 canonical하게 존재한다.
+  이 repository는 계속 documentation-only owner다. RPL-103 Stage B owner decision은
   [ADR-0006](adr/ADR-0006-runtime-technology-framework-dependency-boundary.md)에 accepted/effective
-  상태로 기록됐다: Shared AI=Kotlin/JVM, Spring AI=adapter/integration library, no Phase 1
-  Python worker. PR #7 canonical main projection은 pending이다.
+  상태로 기록됐고, Shared AI=Kotlin/JVM, Spring AI=adapter/integration library, no Phase 1
+  Python worker다. PR #7은 canonical `shared-ai-architecture` `main`에 merge됐다.
+- 현재 첫 production model-inference provider target은 OpenAI API / GPT family이며
+  [ADR-0007](adr/ADR-0007-current-openai-gpt-provider-target.md)가 provider-neutral boundary와
+  함께 기록한다. Exact GPT model, embeddings와 reranker는 deferred다.
 - Candidate before promotion, Cloud/AI 결과는 자동 Truth 아님 (master §6.4~6.5)
 ```
 
@@ -88,12 +92,13 @@ Shared AI 설계가 상위 canonical source의 기존 결정을 조용히 재해
 | Concept | Existing owner | Proposed owner | Conflict | Action |
 | --- | --- | --- | --- | --- |
 | Provider 실행·key·model alias·timeout·rate limit·usage·trace | Shared AI (ADR-0015 §7.4) | Shared AI | No | Keep |
+| Current model-inference provider target | Shared AI (ADR-0015 §7.4) | Shared AI — OpenAI API / GPT family for current target | Resolved | **RESOLVED — [ADR-0007](adr/ADR-0007-current-openai-gpt-provider-target.md)** (first concrete Spring AI model adapter; provider-neutral contract 유지; permanent/exclusive choice 아님) |
 | AI Token Streaming transport (SSE) | Platform (ADR-0015 §7.5) | Platform 유지, Shared AI는 기술 구현 | No | Preserve |
 | 제품별 System Prompt / Workflow / Domain Policy | Product (ADR-0015 §7.4) | Product | No | Preserve |
 | Finance Lens **semantics** | Finance | Finance | No | Keep |
 | Finance PolicyGuard / Output Validator / Routing **규칙** | Finance | Finance | No | Keep |
 | Lens/Skill **실행 계약**(interface) | Finance 자체 runtime contract 보유; Platform은 "공통 AI Orchestration"을 candidate로만 인정 | Shared AI (실행 mechanism) | Resolved | **RESOLVED — [ADR-0001](adr/ADR-0001-skill-lens-workflow-execution-ownership.md)** (실행 mechanism=Shared AI, 정의·선택·검증=Product/Domain; Finance는 병존+opt-in) |
-| Retriever / RAG · Embedding · Index projection | Platform이 candidate로만 인정 (ADR-0015 §10 follow-up) | Product/Domain=semantic SoT·admission·selection, Shared AI=projection lifecycle·retrieval execution | Resolved | **RESOLVED — [ADR-0003](adr/ADR-0003-retrieval-knowledge-runtime-ownership-lifecycle.md)**; Phase 1 persistence candidate=PostgreSQL+pgvector(+필요 시 FTS), Spring AI VectorStore=adapter ([accepted ADR-0006](adr/ADR-0006-runtime-technology-framework-dependency-boundary.md); PR #7 canonical projection pending) |
+| Retriever / RAG · Embedding · Index projection | Platform이 candidate로만 인정 (ADR-0015 §10 follow-up) | Product/Domain=semantic SoT·admission·selection, Shared AI=projection lifecycle·retrieval execution | Resolved | **RESOLVED — [ADR-0003](adr/ADR-0003-retrieval-knowledge-runtime-ownership-lifecycle.md)**; Phase 1 persistence candidate=PostgreSQL+pgvector(+필요 시 FTS), Spring AI VectorStore=adapter ([accepted ADR-0006](adr/ADR-0006-runtime-technology-framework-dependency-boundary.md); PR #7 canonical projection complete) |
 | Finance **Knowledge Artifact** 저장(Lens/PolicyGuard 문서) | Finance (Markdown+WAS, no DB) | Finance 유지 | No | Preserve — RAG corpus와 구분 |
 | Product structured 사실(미납·예약·통증 score·journal metadata) | Product Backend / DB | Product (Shared AI는 Tool로 소비) | No | Preserve — direct DB 금지 |
 | Evidence contract | Finance evidence/grounding semantics, Carelog Product/privacy semantics | Shared AI Core envelope + Product/Domain extension | Resolved | **RESOLVED — [ADR-0002](adr/ADR-0002-evidence-provenance-core-domain-boundary.md)** (공통 envelope·correlation만 Shared AI; admissibility·time·validation은 Product/Domain) |
@@ -101,7 +106,7 @@ Shared AI 설계가 상위 canonical source의 기존 결정을 조용히 재해
 | Execution Context·API 경계·tenant/resource isolation | Platform 인증 + Product authorization; Shared AI 실행 계약 | Shared AI=context 계약·무결성 검증·격리 seam, Product=authority/query-time 판정 | Resolved | **RESOLVED — [ADR-0004](adr/ADR-0004-execution-context-api-tenant-isolation.md)** (identity≠authz, identifier≠authority, query-time authority, child scope 비확대, fail-closed; OD-5 부분·OD-7 security-boundary) |
 | Product DB ownership | Product/Foundation | Product | No | Preserve |
 | Shared AI Phase 1 physical placement | Platform (이전 assumption: 외부 independent runtime) | `platform-core` same-JVM logical module | Resolved by coordinated owners | **ACCEPTED — [ADR-0005](adr/ADR-0005-runtime-placement-platform-core-modular-monolith-boundary.md) + Foundation ADR-0018, effective 2026-08-26** |
-| Shared AI Phase 1 runtime technology | Shared AI implementation owner; Platform-wide boundary 보존 | Kotlin/JVM core, Spring MVC host, Spring AI adapter, optional future Python worker | Accepted/effective 2026-08-26; canonical projection pending | **ACCEPTED — [ADR-0006](adr/ADR-0006-runtime-technology-framework-dependency-boundary.md)** (owner approval + `RPL103_STAGE_B_DELTA_REVIEW_PASS`, PR #7); implementation 아님 |
+| Shared AI Phase 1 runtime technology | Shared AI implementation owner; Platform-wide boundary 보존 | Kotlin/JVM core, Spring MVC host, Spring AI adapter, optional future Python worker | Accepted/effective 2026-08-26; canonical projection complete | **ACCEPTED — [ADR-0006](adr/ADR-0006-runtime-technology-framework-dependency-boundary.md)** (owner approval + `RPL103_STAGE_B_DELTA_REVIEW_PASS`, PR #7 merge); implementation과 deployment activation은 별도 |
 
 충돌 분류 요약:
 
@@ -115,7 +120,8 @@ RESOLVED (ADR-0003)     : Retriever/RAG execution·projection lifecycle 소유(O
 RESOLVED (ADR-0004)     : Execution Context·API 경계·tenant/resource isolation·query-time authority
                           (OD-5 부분: 신뢰/context 계약 WHAT; OD-7 security-boundary 부분)
 RESOLVED (ADR-0005 / Foundation ADR-0018): Phase 1 placement — platform-core same-JVM logical module
-RESOLVED (ADR-0006)    : Phase 1 runtime technology — accepted/effective 2026-08-26; PR #7 canonical projection pending
+RESOLVED (ADR-0006)    : Phase 1 runtime technology — accepted/effective 2026-08-26; PR #7 canonical projection complete
+RESOLVED (ADR-0007)    : Current model-inference target — OpenAI API / GPT family through provider-neutral contracts; exact GPT model, embeddings와 reranker deferred
 NEEDS_OWNER_REPO_UPDATE : 없음
 BLOCKING_CONFLICT       : 없음
 ```
