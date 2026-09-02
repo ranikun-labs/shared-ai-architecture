@@ -52,12 +52,20 @@ Decision status와 implementation status는 분리한다. 문서 존재가 구�
 repository: bootstrap
 runtime code: 없음 (문서 전용)
 Shared AI Phase 1 placement: platform-core same-JVM logical module (accepted/effective 2026-08-26)
-Shared AI neutral foundation: canonical in platform-services (RPL-106); model-inference implementation pending
+Shared AI neutral foundation: canonical in platform-services (RPL-106)
+Current implementation projection: RPL-107 synchronous OpenAI Slice A = IMPLEMENTED;
+                              see docs/source-of-truth-map.md §2.1
 Current model-inference provider target: OpenAI API / GPT family (ADR-0007; exact GPT model deferred)
 Runtime technology: Kotlin + Spring MVC, Spring AI=adapter/integration library,
                               PostgreSQL+pgvector baseline, no Phase 1 Python worker
 Stage B decision status: accepted/effective 2026-08-26; canonical main projection complete via PR #7
+Product-facing AI feature, runtime support, deployment and release: not claimed
 ```
+
+The mutable current implementation/status package is maintained in
+[source-of-truth-map §2.1](docs/source-of-truth-map.md#21-current-implementation-projection).
+This repository remains documentation-only; the implementation evidence belongs to the
+external `platform-services` repository.
 
 RPL-97 Foundation 문서는 `docs/RPL-97-shared-ai-architecture-foundation` branch에서 작성되며,
 독립 Architecture Review 전까지 merge하지 않는다.

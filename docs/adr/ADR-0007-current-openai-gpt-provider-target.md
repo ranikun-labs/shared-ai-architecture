@@ -151,13 +151,17 @@ Execution Context, Skill/Lens/Workflow contract와 neutral Evidence boundary를 
 
 ## 9. RPL-107 Evidence Relationship
 
-RPL-107의 현재 evidence에는 remote historical Bedrock experimental branch와 local OpenAI pivot
-candidate가 포함된다. 둘 다 canonical architecture authority가 아니다.
+RPL-107의 current implementation/status projection은
+[source-of-truth-map §2.1](../source-of-truth-map.md#21-current-implementation-projection)이
+단일 owner로 유지한다. 이 ADR은 OpenAI/GPT provider target과 provider-neutral boundary를
+소유하며, mutable PR/SHA/gate/smoke package를 복제하지 않는다.
 
-이 ADR은 OpenAI/GPT를 current implementation target으로 authorize하지만, 현재 RPL-107 code의
-merge를 자동 승인하지 않는다. 해당 implementation은 current `platform-services` `main`과
-독립적으로 reconciliation/review되어야 한다. local unmerged SHA는 canonical implementation으로
-기록하지 않는다.
+현재 projection에서 OpenAI synchronous Slice A는 `IMPLEMENTED`다. Exact GPT model은 runtime
+configuration으로 남고, `gpt-5.4-mini`는 smoke evidence이지 영구 architecture mandate가
+아니다. Streaming Slice B, Gemini, routing/fallback, Product integration, Finance/Carelog
+user-facing AI feature와 Python/Pydantic/Agent runtime은 각각 `DEFERRED`, `MISSING` 또는
+미구현 범위로 source-of-truth map에 기록된다. 이 implementation evidence는 Product release,
+runtime support 또는 deployment를 자동으로 의미하지 않는다.
 
 ## 10. Foundation Boundary
 
@@ -167,14 +171,14 @@ Shared AI 책임으로 이미 위임한다. 따라서 이 decision에는 Foundat
 
 ## 11. Status Reconciliation
 
-다음 current-state projection을 canonical owner 문서에 반영한다.
+Current implementation/status의 canonical projection은
+[source-of-truth-map §2.1](../source-of-truth-map.md#21-current-implementation-projection)에
+반영한다.
 
 - PR #7은 canonical `shared-ai-architecture` `main`에 merge됐다.
-- Shared AI implementation status는 더 이상 단순히 `not_started`로 표현하지 않는다.
-  `platform-services`의 RPL-106 canonical neutral foundation이 존재하며, 첫 model-inference
-  implementation target은 OpenAI/GPT다. 실제 provider implementation과 deployment activation은
-  별도 implementation work다.
-- README, source-of-truth map과 Shared AI charter는 이 ADR을 참조하는 최소 projection만 가진다.
+- RPL-107 OpenAI synchronous Slice A는 위 current projection에서 `IMPLEMENTED`로 기록된다.
+- README, execution-model과 Shared AI charter는 이 ADR과 source-of-truth map을 참조하는 최소
+  projection만 가진다.
 
 ADR-0006의 당시 branch/projection 상태와 그 Accepted history는 재작성하지 않는다.
 
