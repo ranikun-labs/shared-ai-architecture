@@ -58,12 +58,15 @@ Execution/step state lifecycle mechanics
 Execution outcome state와 provider/tool/retrieval correlation trace
 ```
 
-### 3.2 Shared AI가 소유하는 제품 중립 capability (accepted boundary; implementation deferred)
+### 3.2 Shared AI가 소유하는 제품 중립 capability (accepted boundary; partial implementation)
 
 `ADR-0015` §7.4와 §10은 아래를 처음에는 "제품 중립 기술 Capability 후보"로만 인정하고, 실제
 use case 발생 시 후속 Decision으로 소유권을 확정하라고 명시했다. RPL-97 use case와 후속
-ADR-0001~0007이 실행 mechanism·evidence·context·runtime boundary를 확정했으며, 구현은 여전히
-별도 work다.
+ADR-0001~0007이 실행 mechanism·evidence·context·runtime boundary를 확정했다. 현재 구현은
+부분적이다. RPL-107 OpenAI synchronous Slice A가 첫 concrete model-inference path를
+구현했으며, current implementation/status의 상세와 evidence는
+[source-of-truth-map §2.1](source-of-truth-map.md#21-current-implementation-projection)이
+소유한다. 아래 전체 capability 목록과 Product integration이 완료된 것은 아니다.
 
 ```text
 Provider-neutral Tool orchestration 계약

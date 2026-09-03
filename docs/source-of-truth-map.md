@@ -26,6 +26,49 @@ Shared AI 설계가 상위 canonical source의 기존 결정을 조용히 재해
 > SHA는 재현 anchor이며 영구 business invariant가 아니다. finance/foundation의 feature branch는
 > 이번 작업의 canonical source가 아니다 — canonical은 각 repo의 `main`이다.
 
+위 §2는 RPL-97 preflight 당시의 historical snapshot이다. 현재 Repository와 implementation
+상태는 아래 current projection에서 별도로 판정한다.
+
+## 2.1 Current implementation projection
+
+이 section은 이 Repository의 **primary current implementation/status projection owner**다.
+Accepted ADR의 decision body를 재작성하지 않으며, architecture authority와 mutable
+implementation evidence를 분리한다. 다른 Shared AI 문서는 이 section을 참조하고, 동일한
+PR/SHA/gate/smoke package를 복제하지 않는다.
+
+| Classification | Current projection | Authority / evidence |
+| --- | --- | --- |
+| `CANONICAL` | Shared AI ownership, provider-neutral boundary, Phase 1 `platform-core` same-JVM placement와 OpenAI/GPT target | Accepted ADR-0001~0007 및 Foundation ADR-0015/0018. 이 Repository의 `main`을 canonical documentation branch로 해석하며, 자체 current-main SHA는 고정하지 않는다. |
+| `DOCUMENTED_DRAFT` | Shared AI user-facing scope와 adoption boundary | 이 section과 상위 Product roadmap의 projection. Public support promise나 Product release가 아니다. |
+| `IMPLEMENTED` | RPL-107 OpenAI synchronous Slice A: neutral `ModelGateway` 뒤의 bounded synchronous provider execution | `ranikun-labs/platform-services` `main`의 PR #16 merge와 아래 external implementation evidence |
+| `DEFERRED` | Streaming Slice B, Gemini, routing/fallback, exact GPT default/alias, embeddings/reranker, independent process, Python/Pydantic/Agent runtime (not implemented) | Provider/runtime evolution과 broader capability에 대한 accepted boundary. |
+| `MISSING` | Product consumer integration, Finance/Carelog user-facing AI feature, public Product route, runtime support, deployment와 release evidence | RPL-107 Slice A는 Product consumer 또는 user-facing release를 포함하지 않는다. |
+| `OUT_OF_SCOPE_OTHER_PRODUCT` | Product Prompt, Workflow/Skill semantics, Domain Policy, Tool/Retriever selection semantics, Product semantic validation/business effects와 Character Chat | 각 Product/Domain의 canonical ownership. Shared AI는 generic execution mechanics와 enforcement boundary만 소유한다. |
+
+RPL-107 synchronous OpenAI Slice A는 첫 실제 synchronous OpenAI model execution capability에
+대한 `IMPLEMENTED` evidence다. Exact GPT model은 runtime configuration으로 남고,
+`gpt-5.4-mini`는 아래 live smoke evidence이지 영구 architecture mandate가 아니다.
+Product integration과 Finance/Carelog user-facing feature는 구현되지 않았다.
+
+External implementation evidence:
+
+```text
+platform-services PR #16
+reviewed head: 0e6d20f356502361248ed205ebcb206789b3dd38
+merge commit: b9cae7967182b0776a2dc64023009f5d96cfc8d4
+
+RPL107_OPENAI_SLICEA_DELTA_REVIEW_PASS
+LIVE_OPENAI_SMOKE_PASS
+RPL107_OPENAI_SLICEA_FINAL_MERGE_GATE_PASS
+RPL107_OPENAI_SLICEA_MERGED
+
+live smoke: gpt-5.4-mini, one real synchronous invocation, PASS
+```
+
+이 exact SHA pin은 외부 implementation evidence에만 적용한다. 이 Repository 자신의
+current `main`은 merge 시점에 달라질 수 있으므로 current projection에서 exact SHA로
+self-pin하지 않는다.
+
 ## 3. Existing decision inventory (영역별)
 
 ### Platform-owned (`harness-foundation-docs`)

@@ -20,6 +20,13 @@ target은 [ADR-0007](adr/ADR-0007-current-openai-gpt-provider-target.md)에 따�
 family이고, Spring AI는 integration adapter다. Exact GPT model/version, embeddings, reranker,
 Pydantic AI와 Python runtime은 이 문서에서도 선택하지 않는다.
 
+현재 implementation/status의 primary projection은
+[source-of-truth-map §2.1](source-of-truth-map.md#21-current-implementation-projection)이다.
+그 projection에서 RPL-107 OpenAI synchronous Slice A는 neutral `ModelGateway` 뒤의
+`IMPLEMENTED` bounded provider path로 기록된다. 이 문서는 실행 mechanics를 소유하며,
+Product integration·user-facing feature·runtime support·deployment·release 또는 Streaming
+Slice B를 구현됐다고 주장하지 않는다.
+
 ## 2. Core execution shape
 
 Execution Context 계약, identity≠authz, query-time 현재 authorization, tenant/resource isolation과
